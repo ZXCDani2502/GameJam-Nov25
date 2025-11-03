@@ -77,14 +77,21 @@ public class PlayerController : MonoBehaviour
         transform.Rotate(Vector3.up * mouseX);
     }
 
-    // Robuste Bodenprüfung mit SphereCast
+    // Robuste Bodenprüfung: Raycast + SphereCheck
     bool CheckGrounded()
     {
         float footHeight = controller.height / 2f - controller.radius;
-        Vector3 footPos = transform.position + Vector3.down * footHeight + Vector3.up * groundCheckOffset;
+        Vector3 footPos = transform.position + Vector3.down * footHeight;
 
-        // SphereCast nach unten
-        return Physics.SphereCast(footPos, groundCheckRadius, Vector3.down, out RaycastHit hit, groundCheckDistance, groundMask);
+        // 1) Raycast von Fußmitte
+        if (Physics.Raycast(footPos + Vector3.up * groundCheckOffset, Vector3.down, out RaycastHit hit, groundCheckOffset + 0.1f, groundMask))
+            return true;
+
+        // 2) Fallback: kleine SphereCheck für Kanten und Lücken
+        if (Physics.CheckSphere(footPos + Vector3.up * groundCheckOffset, groundCheckRadius, groundMask))
+            return true;
+
+        return false;
     }
 
     // Visualisierung der Bodenprüfung
@@ -94,11 +101,13 @@ public class PlayerController : MonoBehaviour
 
         float footHeight = controller.height / 2f - controller.radius;
         Vector3 footPos = transform.position + Vector3.down * footHeight + Vector3.up * groundCheckOffset;
+
+        // SphereCheck
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(footPos, groundCheckRadius);
 
-        // Optional: Linie für SphereCast
+        // Raycast Linie
         Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(footPos, footPos + Vector3.down * groundCheckDistance);
+        Gizmos.DrawLine(footPos + Vector3.up * groundCheckOffset, footPos + Vector3.up * groundCheckOffset + Vector3.down * (groundCheckOffset + 0.1f));
     }
 }
