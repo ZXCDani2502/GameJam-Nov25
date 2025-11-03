@@ -5,16 +5,22 @@ public class PlayerController : MonoBehaviour
 {
     [Header("Movement Settings")]
     public float speed = 6f;
-    public float gravity = -9.81f;
-    public float jumpHeight = 1.5f;
+    public float gravity = -9.81f;      // Erdschwerkraft
+    public float jumpHeight = 1f;       // max Sprunghöhe in Metern
 
     [Header("Mouse Settings")]
     public float mouseSensitivity = 120f;
+
+    [Header("Ground Check")]
+    public LayerMask groundMask;          // Layer für Boden-Objekte
+    public float groundCheckOffset = 0.05f; // kleine Höhe über Füßen
+    public float groundCheckRadius = 0.45f; // kleiner als Controller-Radius
 
     private CharacterController controller;
     private Transform cam;
     private Vector3 velocity;
     private float xRotation = 0f;
+    private bool isGrounded;
 
     void Start()
     {
@@ -27,24 +33,33 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        HandleMovement();
         HandleMouseLook();
+        HandleMovement();
     }
 
     void HandleMovement()
     {
+        // Bewegung
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
-
         Vector3 move = transform.right * x + transform.forward * z;
         controller.Move(move * speed * Time.deltaTime);
 
-        if (controller.isGrounded && velocity.y < 0)
+        // Bodenprüfung
+        isGrounded = CheckGrounded();
+
+        // Stabil am Boden bleiben
+        if (isGrounded && velocity.y < 0f)
             velocity.y = -2f;
 
-        if (Input.GetButtonDown("Jump") && controller.isGrounded)
+        // Jump
+        if (Input.GetButtonDown("Jump") && isGrounded)
+        {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            Debug.Log("Jump triggered");
+        }
 
+        // Gravity anwenden
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
     }
@@ -59,5 +74,25 @@ public class PlayerController : MonoBehaviour
 
         cam.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
         transform.Rotate(Vector3.up * mouseX);
+    }
+
+    // Bodenprüfung mit Sphere
+    bool CheckGrounded()
+    {
+        float footHeight = controller.height / 2f - controller.radius;
+        Vector3 footPos = transform.position + Vector3.down * footHeight + Vector3.up * groundCheckOffset;
+
+        return Physics.CheckSphere(footPos, groundCheckRadius, groundMask);
+    }
+
+    // Visualisierung der Bodenprüfung
+    void OnDrawGizmosSelected()
+    {
+        if (controller == null) return;
+
+        float footHeight = controller.height / 2f - controller.radius;
+        Vector3 footPos = transform.position + Vector3.down * footHeight + Vector3.up * groundCheckOffset;
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireSphere(footPos, groundCheckRadius);
     }
 }
