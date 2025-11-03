@@ -74,7 +74,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 6
   gravity: -9.81
-  jumpHeight: 1
+  jumpUpwardForce: 5
+  fallMultiplier: 4.5
   mouseSensitivity: 150
   sensitivityMultiplier: 0.01
   groundMask:
