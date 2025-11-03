@@ -6,7 +6,7 @@ public class PlayerController : MonoBehaviour
     [Header("Movement Settings")]
     public float speed = 6f;
     public float gravity = -9.81f;      // Erdschwerkraft
-    public float jumpHeight = 1f;       // max Sprunghöhe in Metern
+    public float jumpHeight = 1f;       // Max Sprunghöhe in Metern
 
     [Header("Mouse Settings")]
     public float mouseSensitivity = 120f;
@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
     public LayerMask groundMask;          // Layer für Boden-Objekte
     public float groundCheckOffset = 0.05f; // kleine Höhe über Füßen
     public float groundCheckRadius = 0.45f; // kleiner als Controller-Radius
+    public float groundCheckDistance = 0.15f; // Länge des SphereCasts nach unten
 
     private CharacterController controller;
     private Transform cam;
@@ -76,13 +77,14 @@ public class PlayerController : MonoBehaviour
         transform.Rotate(Vector3.up * mouseX);
     }
 
-    // Bodenprüfung mit Sphere
+    // Robuste Bodenprüfung mit SphereCast
     bool CheckGrounded()
     {
         float footHeight = controller.height / 2f - controller.radius;
         Vector3 footPos = transform.position + Vector3.down * footHeight + Vector3.up * groundCheckOffset;
 
-        return Physics.CheckSphere(footPos, groundCheckRadius, groundMask);
+        // SphereCast nach unten
+        return Physics.SphereCast(footPos, groundCheckRadius, Vector3.down, out RaycastHit hit, groundCheckDistance, groundMask);
     }
 
     // Visualisierung der Bodenprüfung
@@ -94,5 +96,9 @@ public class PlayerController : MonoBehaviour
         Vector3 footPos = transform.position + Vector3.down * footHeight + Vector3.up * groundCheckOffset;
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(footPos, groundCheckRadius);
+
+        // Optional: Linie für SphereCast
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawLine(footPos, footPos + Vector3.down * groundCheckDistance);
     }
 }
