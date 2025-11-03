@@ -75,7 +75,8 @@ MonoBehaviour:
   speed: 6
   gravity: -9.81
   jumpHeight: 1
-  mouseSensitivity: 120
+  mouseSensitivity: 150
+  sensitivityMultiplier: 0.01
   groundMask:
     serializedVersion: 2
     m_Bits: 8

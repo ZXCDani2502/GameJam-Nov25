@@ -9,13 +9,14 @@ public class PlayerController : MonoBehaviour
     public float jumpHeight = 1f;       // Max Sprunghöhe in Metern
 
     [Header("Mouse Settings")]
-    public float mouseSensitivity = 120f;
+    public float mouseSensitivity = 120f;       // Zielgeschwindigkeit
+    public float sensitivityMultiplier = 0.01f; // Faktor zur DPI-Normalisierung
 
     [Header("Ground Check")]
-    public LayerMask groundMask;          // Layer für Boden-Objekte
-    public float groundCheckOffset = 0.05f; // kleine Höhe über Füßen
-    public float groundCheckRadius = 0.45f; // kleiner als Controller-Radius
-    public float groundCheckDistance = 0.15f; // Länge des SphereCasts nach unten
+    public LayerMask groundMask;          
+    public float groundCheckOffset = 0.05f;
+    public float groundCheckRadius = 0.45f;
+    public float groundCheckDistance = 0.15f;
 
     private CharacterController controller;
     private Transform cam;
@@ -40,35 +41,33 @@ public class PlayerController : MonoBehaviour
 
     void HandleMovement()
     {
-        // Bewegung
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
         Vector3 move = transform.right * x + transform.forward * z;
         controller.Move(move * speed * Time.deltaTime);
 
-        // Bodenprüfung
         isGrounded = CheckGrounded();
 
-        // Stabil am Boden bleiben
         if (isGrounded && velocity.y < 0f)
             velocity.y = -2f;
 
-        // Jump
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
             Debug.Log("Jump triggered");
         }
 
-        // Gravity anwenden
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
     }
 
     void HandleMouseLook()
     {
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+        if (!Application.isFocused) return;
+
+        // DPI-normalisierte Mausbewegung
+        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * sensitivityMultiplier;
+        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * sensitivityMultiplier;
 
         xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, -80f, 80f);
@@ -77,24 +76,20 @@ public class PlayerController : MonoBehaviour
         transform.Rotate(Vector3.up * mouseX);
     }
 
-    // Robuste Bodenprüfung: Raycast + SphereCheck
     bool CheckGrounded()
     {
         float footHeight = controller.height / 2f - controller.radius;
         Vector3 footPos = transform.position + Vector3.down * footHeight;
 
-        // 1) Raycast von Fußmitte
         if (Physics.Raycast(footPos + Vector3.up * groundCheckOffset, Vector3.down, out RaycastHit hit, groundCheckOffset + 0.1f, groundMask))
             return true;
 
-        // 2) Fallback: kleine SphereCheck für Kanten und Lücken
         if (Physics.CheckSphere(footPos + Vector3.up * groundCheckOffset, groundCheckRadius, groundMask))
             return true;
 
         return false;
     }
 
-    // Visualisierung der Bodenprüfung
     void OnDrawGizmosSelected()
     {
         if (controller == null) return;
@@ -102,11 +97,9 @@ public class PlayerController : MonoBehaviour
         float footHeight = controller.height / 2f - controller.radius;
         Vector3 footPos = transform.position + Vector3.down * footHeight + Vector3.up * groundCheckOffset;
 
-        // SphereCheck
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(footPos, groundCheckRadius);
 
-        // Raycast Linie
         Gizmos.color = Color.yellow;
         Gizmos.DrawLine(footPos + Vector3.up * groundCheckOffset, footPos + Vector3.up * groundCheckOffset + Vector3.down * (groundCheckOffset + 0.1f));
     }
