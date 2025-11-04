@@ -5,6 +5,8 @@ public class PlayerController : MonoBehaviour
 {
     [Header("Movement Settings")]
     public float speed = 6f;
+    public float sprintMultiplier = 1.6f;          // How much faster sprinting is
+    public float sprintAcceleration = 8f;          // How quickly sprinting speed ramps up
     public float gravity = -9.81f;
     public float jumpHeight = 2f;
     public float fallMultiplier = 5f;
@@ -15,15 +17,19 @@ public class PlayerController : MonoBehaviour
 
     [Header("Ground Check")]
     public LayerMask groundMask;
-    public float groundCheckOffset = 0.02f; // kleiner, realistischere Bodenerkennung
+    public float groundCheckOffset = 0.02f;        // Small offset for realistic ground detection
     public float groundCheckRadius = 0.45f;
-    public float groundProximityThreshold = 0.1f; // Abstand zum Boden, um velocity zu clampen
+    public float groundProximityThreshold = 0.0f;  // Threshold distance to clamp velocity near ground (makes jumps not work so we set it to 0 for now)
 
     private CharacterController controller;
     private Transform cam;
     private Vector3 velocity;
     private float xRotation = 0f;
     private bool isGrounded;
+
+    // Sprint-related variables
+    private bool isSprinting;
+    private float currentSpeed;
 
     void Start()
     {
@@ -32,6 +38,8 @@ public class PlayerController : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        currentSpeed = speed;
     }
 
     void Update()
@@ -44,25 +52,38 @@ public class PlayerController : MonoBehaviour
     {
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
-        Vector3 move = transform.right * x + transform.forward * z;
-        controller.Move(move * speed * Time.deltaTime);
 
+        // Sprinting only when holding Shift AND moving forward (W only)
+        isSprinting = Input.GetKey(KeyCode.LeftShift) && z > 0f && x == 0f;
+
+        // Target movement speed
+        float targetSpeed = isSprinting ? speed * sprintMultiplier : speed;
+
+        // Smooth acceleration / deceleration
+        currentSpeed = Mathf.Lerp(currentSpeed, targetSpeed, sprintAcceleration * Time.deltaTime);
+
+        // Move the player
+        Vector3 move = transform.right * x + transform.forward * z;
+        controller.Move(move * currentSpeed * Time.deltaTime);
+
+        // Check if grounded
         isGrounded = CheckGrounded();
 
-        // Boden-Stabilisierung nur, wenn wirklich sehr nah am Boden
+        // Keep player stable when grounded and close to surface
         if (isGrounded && velocity.y < 0f && GetDistanceToGround() <= groundProximityThreshold)
             velocity.y = -2f;
 
-        // Sprung starten
+        // Jump
         if (Input.GetButtonDown("Jump") && isGrounded)
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
 
-        // Gravitation anwenden
+        // Apply gravity
         if (velocity.y < 0f)
             velocity.y += gravity * fallMultiplier * Time.deltaTime;
         else
             velocity.y += gravity * Time.deltaTime;
 
+        // Apply vertical motion
         controller.Move(velocity * Time.deltaTime);
     }
 
@@ -104,19 +125,5 @@ public class PlayerController : MonoBehaviour
             return hit.distance;
         else
             return Mathf.Infinity;
-    }
-
-    void OnDrawGizmosSelected()
-    {
-        if (controller == null) return;
-
-        float footHeight = controller.height / 2f - controller.radius;
-        Vector3 footPos = transform.position + Vector3.down * footHeight + Vector3.up * groundCheckOffset;
-
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawWireSphere(footPos, groundCheckRadius);
-
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(footPos, footPos + Vector3.down * (groundCheckOffset + 0.1f));
     }
 }
