@@ -1,37 +1,24 @@
-using UnityEditor.Rendering;
 using UnityEngine;
 
-public class FlashLight : MonoBehaviour
-{
+public class Flashlight : MonoBehaviour {
 
-    [SerializeField] GameObject flashLightLight;
+    Light light;
 
-    private bool _flashLightActive = false;
-    
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        flashLightLight.gameObject.SetActive(false);
+    void Awake() {
+        light = GetComponent<Light>();
+        light.enabled = false;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            if(_flashLightActive == false)
-            {
-                flashLightLight.SetActive(true);
-                //Play switch sound on 
-                //start humming noise
-                _flashLightActive = true;
-            }else
-            {
-                flashLightLight.SetActive(false);
-                //play switch sound off
-                //stop humming noise
-                _flashLightActive = false;
+    void Update() {
+        if (Input.GetKeyDown(KeyCode.F)) {
+            if (light.enabled) {
+                light.enabled = false;
+                EventManager.Trigger("sfx-light-off");
+            } else {
+                light.enabled = true;
+                EventManager.Trigger("sfx-light-on");
             }
+            EventManager.Trigger("made-noise", 6);
         }
     }
 }

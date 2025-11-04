@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 7531714933274804867}
   - component: {fileID: 5226155300716748594}
   - component: {fileID: 6401622197561847163}
-  - component: {fileID: 7344360827178592799}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -95,19 +94,6 @@ MonoBehaviour:
   runFootstepTimerLimit: 0.3
   walkNoiseLevel: 3
   runNoiseLevel: 5
---- !u!114 &7344360827178592799
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1130263139884101202}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5ae167c1bd31b994dbca53c2620a5a18, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  flashLightLight: {fileID: 5096124280780154471}
 --- !u!1 &3690841451403856564
 GameObject:
   m_ObjectHideFlags: 0
@@ -176,6 +162,7 @@ GameObject:
   - component: {fileID: 8135615112569509487}
   - component: {fileID: 2316584092813616456}
   - component: {fileID: 2649281693857528691}
+  - component: {fileID: 6350916352165283441}
   m_Layer: 0
   m_Name: FlashLight
   m_TagString: Untagged
@@ -286,6 +273,18 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
+--- !u!114 &6350916352165283441
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5096124280780154471}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ae167c1bd31b994dbca53c2620a5a18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6908033027408920886
 GameObject:
   m_ObjectHideFlags: 0

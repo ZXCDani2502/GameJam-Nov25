@@ -8,7 +8,17 @@ public class F_Footsteps : MonoBehaviour {
     float rayDistance = 0.3f;
     const string EVENT_PATH = "event:/Character/Footsteps";
 
-    public void PlayWalkEvent() {
+    void OnEnable() {
+        EventManager.Subscribe("sfx-walk", PlayWalkEvent);
+        EventManager.Subscribe("sfx-run", PlayRunEvent);
+    }
+    void OnDisable() {
+        EventManager.Unsubscribe("sfx-walk", PlayWalkEvent);
+        EventManager.Unsubscribe("sfx-run", PlayRunEvent);
+    }
+
+
+    void PlayWalkEvent() {
         MaterialCheck();
         EventInstance walk = RuntimeManager.CreateInstance(EVENT_PATH);
         RuntimeManager.AttachInstanceToGameObject(walk, transform, true);
@@ -21,7 +31,7 @@ public class F_Footsteps : MonoBehaviour {
         walk.release();
     }
     
-    public void PlayRunEvent() {
+    void PlayRunEvent() {
         MaterialCheck();
         EventInstance run = RuntimeManager.CreateInstance(EVENT_PATH);
         RuntimeManager.AttachInstanceToGameObject(run, transform, true);

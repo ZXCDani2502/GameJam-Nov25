@@ -49,15 +49,12 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] int runNoiseLevel = 5;
     float walkFootstepTimer;
     float runFootstepTimer;
-    F_Footsteps f_footsteps;
 
     // --- ADDED ---
     CameraShake cameraShake;
     // --------------
 
     void Start() {
-        f_footsteps = GetComponentInChildren<F_Footsteps>();
-
         controller = GetComponent<CharacterController>();
         cam = Camera.main.transform;
 
@@ -104,12 +101,13 @@ public class PlayerController : MonoBehaviour {
         
         if(walkFootstepTimer > walkFootstepTimerLimit) {
             walkFootstepTimer = 0;
-            f_footsteps.PlayWalkEvent();
+            
+            EventManager.Trigger("sfx-walk");
             EventManager.Trigger("made-noise", walkNoiseLevel);
         } 
         if(runFootstepTimer > runFootstepTimerLimit) {
             runFootstepTimer = 0;
-            f_footsteps.PlayRunEvent();
+            EventManager.Trigger("sfx-run");
             EventManager.Trigger("made-noise", runNoiseLevel);
         }
 
