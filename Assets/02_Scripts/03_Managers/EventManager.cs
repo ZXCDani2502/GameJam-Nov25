@@ -20,8 +20,10 @@ public class EventManager : MonoBehaviour {
     }
 
     public static void Trigger(string _eventName) {
-        if (dictionary.ContainsKey(_eventName))
+        if (dictionary.ContainsKey(_eventName)) {
             dictionary[_eventName]?.Invoke();
+            Debug.Log("Event Triggered: " + _eventName);
+        }
     }
     #endregion
 
@@ -37,8 +39,10 @@ public class EventManager : MonoBehaviour {
             integerDictionary[_eventName] -= _action;
     }
     public static void Trigger(string _eventName, int value) {
-        if (integerDictionary.ContainsKey(_eventName))
+        if (integerDictionary.ContainsKey(_eventName)) {
             integerDictionary[_eventName]?.Invoke(value);
+            Debug.Log("Event Triggered: " + _eventName + " With value: " + value);
+        }
     }
     #endregion
 }

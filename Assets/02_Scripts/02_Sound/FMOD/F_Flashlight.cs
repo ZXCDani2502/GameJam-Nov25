@@ -17,16 +17,25 @@ public class F_Flashlight : MonoBehaviour {
 
 
     void PlayOnEvent() {
-        EventInstance On = RuntimeManager.CreateInstance(EVENT_PATH);
-        RuntimeManager.AttachInstanceToGameObject(On, transform, true);
+        EventInstance on = RuntimeManager.CreateInstance(EVENT_PATH);
+        RuntimeManager.AttachInstanceToGameObject(on, transform, true);
 
 
-        On.setParameterByName("WalkRun", 0, false); // 0 is walk
+        on.setParameterByName("LightSwitch", 1, false); // 1 is on
 
-        On.start();
-        On.release();
+        on.start();
+        on.release();
     }
+
     void PlayOffEvent() {
-        throw new NotImplementedException();
+        EventInstance off = RuntimeManager.CreateInstance(EVENT_PATH);
+        RuntimeManager.AttachInstanceToGameObject(off, transform, true);
+
+        // turn off buzzing
+
+        off.setParameterByName("LightSwitch", 3, false); // 3 is off
+
+        off.start();
+        off.release();
     }
 }
