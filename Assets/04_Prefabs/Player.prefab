@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7531714933274804867}
   - component: {fileID: 5226155300716748594}
   - component: {fileID: 6401622197561847163}
+  - component: {fileID: 7344360827178592799}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -73,6 +74,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 5.5
+  sprintMultiplier: 1.6
+  sprintAcceleration: 8
   gravity: -30
   jumpHeight: 1.5
   fallMultiplier: 1.15
@@ -84,6 +87,19 @@ MonoBehaviour:
   groundCheckOffset: 0.05
   groundCheckRadius: 0.45
   groundProximityThreshold: 0
+--- !u!114 &7344360827178592799
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1130263139884101202}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ae167c1bd31b994dbca53c2620a5a18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flashLightLight: {fileID: 5096124280780154471}
 --- !u!1 &5096124280780154471
 GameObject:
   m_ObjectHideFlags: 0
