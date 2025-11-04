@@ -51,12 +51,19 @@ public class PlayerController : MonoBehaviour {
     float runFootstepTimer;
     F_Footsteps f_footsteps;
 
+    // --- ADDED ---
+    CameraShake cameraShake;
+    // --------------
 
     void Start() {
         f_footsteps = GetComponentInChildren<F_Footsteps>();
 
         controller = GetComponent<CharacterController>();
         cam = Camera.main.transform;
+
+        // --- ADDED ---
+        cameraShake = cam.GetComponent<CameraShake>();
+        // --------------
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -113,11 +120,22 @@ public class PlayerController : MonoBehaviour {
         if (isGrounded && velocity.y < 0f && GetDistanceToGround() <= groundProximityThreshold) {
             velocity.y = -2f;
 
+            // --- ADDED ---
+            if (cameraShake != null)
+                cameraShake.Shake(0.15f, 0.1f); // small landing shake
+            // --------------
+
             // (Sound)footstep landing sound when hitting ground after jump
         }
 
         if (Input.GetButtonDown("Jump") && isGrounded) {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+
+            // --- ADDED ---
+            if (cameraShake != null)
+                cameraShake.Shake(0.1f, 0.08f); // subtle jump shake
+            // --------------
+
             // (Sound)jump sound
         }
 
@@ -135,6 +153,14 @@ public class PlayerController : MonoBehaviour {
         // -mute footsteps when airborne
         // -possibly add heavy breathing overlay while sprinting?
         // -could add short “panting exhale” when stopping sprint suddenly (yes it does that should you ignore the warnings)
+    
+        if (Input.GetKeyDown(KeyCode.K)) {
+    if (cameraShake != null) {
+        cameraShake.Shake(0.6f, 0.5f);  // noticeable duration & magnitude
+        Debug.Log("CameraShake triggered!");
+    }
+    else Debug.LogWarning("cameraShake reference is null");
+}
     }
 
     void HandleMouseLook() {
