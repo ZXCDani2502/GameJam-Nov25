@@ -21,9 +21,15 @@ public class FlashLight : MonoBehaviour
         {
             if(_flashLightActive == false)
             {
+                flashLightLight.SetActive(true);
+                //Play switch sound on 
+                //start humming noise
                 _flashLightActive = true;
             }else
             {
+                flashLightLight.SetActive(false);
+                //play switch sound off
+                //stop humming noise
                 _flashLightActive = false;
             }
         }
