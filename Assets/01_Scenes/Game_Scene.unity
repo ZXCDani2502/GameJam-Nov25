@@ -301,18 +301,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 2316584092813616456, guid: 492a9582aeca7ca4fb7cfc8b282f97d4, type: 3}
-      propertyPath: m_Intensity
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 2316584092813616456, guid: 492a9582aeca7ca4fb7cfc8b282f97d4, type: 3}
-      propertyPath: m_SpotAngle
-      value: 49.67136
-      objectReference: {fileID: 0}
-    - target: {fileID: 2316584092813616456, guid: 492a9582aeca7ca4fb7cfc8b282f97d4, type: 3}
-      propertyPath: m_InnerSpotAngle
-      value: 49.67136
-      objectReference: {fileID: 0}
     - target: {fileID: 7531714933274804867, guid: 492a9582aeca7ca4fb7cfc8b282f97d4, type: 3}
       propertyPath: m_LocalPosition.x
       value: 749.8
