@@ -1,8 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
-public class PlayerController : MonoBehaviour
-{
+public class PlayerController : MonoBehaviour {
     [Header("Movement Settings")]
     public float speed = 6f;
     public float sprintMultiplier = 1.6f;
@@ -27,23 +26,33 @@ public class PlayerController : MonoBehaviour
     public float staminaRegenRate = 0.5f;
     public float exhaustionCooldown = 4f;
 
-    private CharacterController controller;
-    private Transform cam;
-    private Vector3 velocity;
-    private float xRotation = 0f;
-    private bool isGrounded;
+    CharacterController controller;
+    Transform cam;
+    Vector3 velocity;
+    float xRotation = 0f;
+    bool isGrounded;
 
     // Sprint variables
-    private bool isSprinting;
-    private float currentSpeed;
+    bool isSprinting;
+    float currentSpeed;
 
     // Stamina variables
-    private float currentStamina;
-    private bool isExhausted = false;
-    private float exhaustionTimer = 0f;
+    float currentStamina;
+    bool isExhausted = false;
+    float exhaustionTimer = 0f;
 
-    void Start()
-    {
+    // Footsteps
+    [Header("Footsteps")]
+    [SerializeField] float walkFootstepTimerLimit = 0.6f;
+    [SerializeField] float runFootstepTimerLimit = 0.3f;
+    float walkFootstepTimer;
+    float runFootstepTimer;
+    F_Footsteps f_footsteps;
+
+
+    void Start() {
+        f_footsteps = GetComponentInChildren<F_Footsteps>();
+
         controller = GetComponent<CharacterController>();
         cam = Camera.main.transform;
 
@@ -56,15 +65,14 @@ public class PlayerController : MonoBehaviour
         // (Sound)baseline idle breathing
     }
 
-    void Update()
-    {
+    void Update() {
         HandleMouseLook();
         HandleMovement();
         HandleStamina();
     }
 
-    void HandleMovement()
-    {
+    void HandleMovement() {
+        #region WalkRun
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
 
@@ -78,17 +86,33 @@ public class PlayerController : MonoBehaviour
         Vector3 move = transform.right * x + transform.forward * z;
         controller.Move(move * currentSpeed * Time.deltaTime);
 
+        #endregion
+        #region Footsteps
+        if (move != Vector3.zero && !isSprinting)  walkFootstepTimer += Time.deltaTime;
+        else if (move != Vector3.zero && isSprinting)  runFootstepTimer += Time.deltaTime;
+        
+        if(walkFootstepTimer > walkFootstepTimerLimit) {
+            walkFootstepTimer = 0;
+            f_footsteps.PlayWalkEvent();
+            EventManager.Trigger("made-noise", 3);
+        } 
+        if(runFootstepTimer > runFootstepTimerLimit) {
+            runFootstepTimer = 0;
+            f_footsteps.PlayRunEvent();
+            EventManager.Trigger("made-noise", 5);
+        }
+
+        #endregion
+        #region Jump
         isGrounded = CheckGrounded();
 
-        if (isGrounded && velocity.y < 0f && GetDistanceToGround() <= groundProximityThreshold)
-        {
+        if (isGrounded && velocity.y < 0f && GetDistanceToGround() <= groundProximityThreshold) {
             velocity.y = -2f;
 
             // (Sound)footstep landing sound when hitting ground after jump
         }
 
-        if (Input.GetButtonDown("Jump") && isGrounded)
-        {
+        if (Input.GetButtonDown("Jump") && isGrounded) {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
             // (Sound)jump sound
         }
@@ -99,6 +123,7 @@ public class PlayerController : MonoBehaviour
             velocity.y += gravity * Time.deltaTime;
 
         controller.Move(velocity * Time.deltaTime);
+        #endregion
 
         // (Sound)handle footsteps
         // -looping walking footstep sounds when moving and grounded
@@ -108,8 +133,7 @@ public class PlayerController : MonoBehaviour
         // -could add short “panting exhale” when stopping sprint suddenly (yes it does that should you ignore the warnings)
     }
 
-    void HandleMouseLook()
-    {
+    void HandleMouseLook() {
         if (!Application.isFocused) return;
 
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * sensitivityMultiplier;
@@ -122,42 +146,31 @@ public class PlayerController : MonoBehaviour
         transform.Rotate(Vector3.up * mouseX);
     }
 
-    void HandleStamina()
-    {
+    void HandleStamina() {
         bool wasExhausted = isExhausted;
 
-        if (isSprinting)
-        {
+        if (isSprinting) {
             currentStamina -= staminaDrainRate * Time.deltaTime;
 
-            if (currentStamina <= 0f)
-            {
+            if (currentStamina <= 0f) {
                 currentStamina = 0f;
                 isExhausted = true;
                 exhaustionTimer = exhaustionCooldown;
 
                 // (Sound)out of breath
                 // (Sound)footsteps should stop or slow to normal walking pace (this is where your sprinting gets blocked)
-            }
-            else
-            {
+            } else {
                 // (Sound)gradually crossfade normal breathing to heavier breathing when sprinting
                 // (Sound)intensify footsteps slightly while sprinting
             }
-        }
-        else
-        {
-            if (isExhausted)
-            {
+        } else {
+            if (isExhausted) {
                 exhaustionTimer -= Time.deltaTime;
-                if (exhaustionTimer <= 0f)
-                {
+                if (exhaustionTimer <= 0f) {
                     isExhausted = false;
                     // (Sound)some recovery sign
                 }
-            }
-            else
-            {
+            } else {
                 currentStamina = Mathf.Min(maxSprintStamina, currentStamina + staminaRegenRate * Time.deltaTime);
 
                 // (Sound)gradual return to normal breathing pace as stamina refills
@@ -165,8 +178,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    bool CheckGrounded()
-    {
+    bool CheckGrounded() {
         float footHeight = controller.height / 2f - controller.radius;
         Vector3 footPos = transform.position + Vector3.down * footHeight;
 
@@ -179,8 +191,7 @@ public class PlayerController : MonoBehaviour
         return false;
     }
 
-    float GetDistanceToGround()
-    {
+    float GetDistanceToGround() {
         RaycastHit hit;
         float footHeight = controller.height / 2f - controller.radius;
         Vector3 footPos = transform.position + Vector3.down * footHeight;
