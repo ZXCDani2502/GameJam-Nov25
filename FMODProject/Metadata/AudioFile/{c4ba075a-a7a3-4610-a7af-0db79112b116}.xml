@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{c4ba075a-a7a3-4610-a7af-0db79112b116}">
+		<property name="assetPath">
+			<value>ESM_GF_fx_gravel_one_shots_footstep_sneakers_walking_dry_crunchy_exterior_28.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>96</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>0.57114583333333335</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{f91a5efa-5b68-4939-9898-fcc727351166}</destination>
+		</relationship>
+	</object>
+</objects>
