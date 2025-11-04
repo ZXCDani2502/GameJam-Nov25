@@ -14,6 +14,13 @@ public class SoundAggression : MonoBehaviour
     }
 
     void Update() {
+        if(aggression > 30) {
+            //footsteps behind you
+        }
+        if(aggression > 60) {
+            //footsteps behind you
+        }
+
         aggression -= pacifyMultiplier * Time.deltaTime;
     }
 
