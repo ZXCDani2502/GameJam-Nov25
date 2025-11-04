@@ -1,0 +1,44 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class EventManager : MonoBehaviour {
+    static readonly Dictionary<string, Action> dictionary = new();
+    static readonly Dictionary<string, Action<int>> integerDictionary = new();
+
+
+    #region Normal
+    public static void Subscribe(string _eventName, Action _action) {
+        if (dictionary.ContainsKey(_eventName))
+            dictionary[_eventName] += _action;
+        else
+            dictionary[_eventName] = _action;
+    }
+    public static void Unsubscribe(string _eventName, Action _action) {
+        if (dictionary.ContainsKey(_eventName))
+            dictionary[_eventName] -= _action;
+    }
+
+    public static void Trigger(string _eventName) {
+        if (dictionary.ContainsKey(_eventName))
+            dictionary[_eventName]?.Invoke();
+    }
+    #endregion
+
+    #region Int
+    public static void SubscribeInteger(string _eventName, Action<int> _action) {
+        if (integerDictionary.ContainsKey(_eventName))
+            integerDictionary[_eventName] += _action;
+        else
+            integerDictionary[_eventName] = _action;
+    }
+    public static void UnsubscribeInteger(string _eventName, Action<int> _action) {
+        if (integerDictionary.ContainsKey(_eventName))
+            integerDictionary[_eventName] -= _action;
+    }
+    public static void Trigger(string _eventName, int value) {
+        if (integerDictionary.ContainsKey(_eventName))
+            integerDictionary[_eventName]?.Invoke(value);
+    }
+    #endregion
+}
