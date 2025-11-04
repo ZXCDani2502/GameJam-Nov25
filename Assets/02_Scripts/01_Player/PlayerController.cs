@@ -45,6 +45,8 @@ public class PlayerController : MonoBehaviour {
     [Header("Footsteps")]
     [SerializeField] float walkFootstepTimerLimit = 0.6f;
     [SerializeField] float runFootstepTimerLimit = 0.3f;
+    [SerializeField] int walkNoiseLevel = 3;
+    [SerializeField] int runNoiseLevel = 5;
     float walkFootstepTimer;
     float runFootstepTimer;
     F_Footsteps f_footsteps;
@@ -73,6 +75,7 @@ public class PlayerController : MonoBehaviour {
 
     void HandleMovement() {
         #region WalkRun
+
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
 
@@ -88,18 +91,19 @@ public class PlayerController : MonoBehaviour {
 
         #endregion
         #region Footsteps
+
         if (move != Vector3.zero && !isSprinting)  walkFootstepTimer += Time.deltaTime;
         else if (move != Vector3.zero && isSprinting)  runFootstepTimer += Time.deltaTime;
         
         if(walkFootstepTimer > walkFootstepTimerLimit) {
             walkFootstepTimer = 0;
             f_footsteps.PlayWalkEvent();
-            EventManager.Trigger("made-noise", 3);
+            EventManager.Trigger("made-noise", walkNoiseLevel);
         } 
         if(runFootstepTimer > runFootstepTimerLimit) {
             runFootstepTimer = 0;
             f_footsteps.PlayRunEvent();
-            EventManager.Trigger("made-noise", 5);
+            EventManager.Trigger("made-noise", runNoiseLevel);
         }
 
         #endregion

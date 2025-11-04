@@ -8,19 +8,6 @@ public class F_Footsteps : MonoBehaviour {
     float rayDistance = 0.3f;
     const string EVENT_PATH = "event:/Character/Footsteps";
 
-    void Start() {
-        //EventDescription eventDescription = RuntimeManager.GetEventDescription(EVENT_PATH);
-        //eventDescription.getParameterDescriptionByName("Terrain", out paramDes);
-        //TERRAIN_ID = paramDes.id;
-        //Debug.Log(TERRAIN_ID.data1 + " " + TERRAIN_ID.data2);
-
-        //TERRAIN_ID.data1 = 2021825314;
-        //TERRAIN_ID.data2 = 708426747;
-
-        //WALKRUN_ID.data1 = 1269329282;
-        //WALKRUN_ID.data2 = 2170595115;
-    }
-
     public void PlayWalkEvent() {
         MaterialCheck();
         EventInstance walk = RuntimeManager.CreateInstance(EVENT_PATH);
@@ -28,7 +15,7 @@ public class F_Footsteps : MonoBehaviour {
 
 
         walk.setParameterByName("Terrain", materialValue);
-        walk.setParameterByName("WalkRun", 0, false);
+        walk.setParameterByName("WalkRun", 0, false); // 0 is walk
 
         walk.start();
         walk.release();
@@ -36,15 +23,15 @@ public class F_Footsteps : MonoBehaviour {
     
     public void PlayRunEvent() {
         MaterialCheck();
-        EventInstance walk = RuntimeManager.CreateInstance(EVENT_PATH);
-        RuntimeManager.AttachInstanceToGameObject(walk, transform, true);
+        EventInstance run = RuntimeManager.CreateInstance(EVENT_PATH);
+        RuntimeManager.AttachInstanceToGameObject(run, transform, true);
 
 
-        walk.setParameterByName("Terrain", materialValue);
-        walk.setParameterByName("WalkRun", 1, false);
+        run.setParameterByName("Terrain", materialValue);
+        run.setParameterByName("WalkRun", 1, false); //1 is run
 
-        walk.start();
-        walk.release();
+        run.start();
+        run.release();
     }
 
     void MaterialCheck() {
