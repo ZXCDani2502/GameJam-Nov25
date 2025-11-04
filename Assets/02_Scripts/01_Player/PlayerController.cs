@@ -5,8 +5,8 @@ public class PlayerController : MonoBehaviour
 {
     [Header("Movement Settings")]
     public float speed = 6f;
-    public float sprintMultiplier = 1.6f;          // How much faster sprinting is
-    public float sprintAcceleration = 8f;          // How quickly sprinting speed ramps up
+    public float sprintMultiplier = 1.6f;
+    public float sprintAcceleration = 8f;
     public float gravity = -9.81f;
     public float jumpHeight = 2f;
     public float fallMultiplier = 5f;
@@ -17,9 +17,15 @@ public class PlayerController : MonoBehaviour
 
     [Header("Ground Check")]
     public LayerMask groundMask;
-    public float groundCheckOffset = 0.02f;        // Small offset for realistic ground detection
+    public float groundCheckOffset = 0.02f;
     public float groundCheckRadius = 0.45f;
-    public float groundProximityThreshold = 0.0f;  // Threshold distance to clamp velocity near ground (makes jumps not work so we set it to 0 for now)
+    public float groundProximityThreshold = 0.0f;
+
+    [Header("Sprint Stamina Settings")]
+    public float maxSprintStamina = 5f;
+    public float staminaDrainRate = 1f;
+    public float staminaRegenRate = 0.5f;
+    public float exhaustionCooldown = 4f;
 
     private CharacterController controller;
     private Transform cam;
@@ -27,9 +33,14 @@ public class PlayerController : MonoBehaviour
     private float xRotation = 0f;
     private bool isGrounded;
 
-    // Sprint-related variables
+    // Sprint variables
     private bool isSprinting;
     private float currentSpeed;
+
+    // Stamina variables
+    private float currentStamina;
+    private bool isExhausted = false;
+    private float exhaustionTimer = 0f;
 
     void Start()
     {
@@ -40,12 +51,16 @@ public class PlayerController : MonoBehaviour
         Cursor.visible = false;
 
         currentSpeed = speed;
+        currentStamina = maxSprintStamina;
+
+        // (Sound)baseline idle breathing
     }
 
     void Update()
     {
         HandleMouseLook();
         HandleMovement();
+        HandleStamina();
     }
 
     void HandleMovement()
@@ -53,38 +68,44 @@ public class PlayerController : MonoBehaviour
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
 
-        // Sprinting only when holding Shift AND moving forward (W only)
-        isSprinting = Input.GetKey(KeyCode.LeftShift) && z > 0f && x == 0f;
+        bool wantsToSprint = Input.GetKey(KeyCode.LeftShift) && z > 0f && x == 0f;
+        bool wasSprinting = isSprinting;
+        isSprinting = wantsToSprint && !isExhausted && currentStamina > 0f;
 
-        // Target movement speed
         float targetSpeed = isSprinting ? speed * sprintMultiplier : speed;
-
-        // Smooth acceleration / deceleration
         currentSpeed = Mathf.Lerp(currentSpeed, targetSpeed, sprintAcceleration * Time.deltaTime);
 
-        // Move the player
         Vector3 move = transform.right * x + transform.forward * z;
         controller.Move(move * currentSpeed * Time.deltaTime);
 
-        // Check if grounded
         isGrounded = CheckGrounded();
 
-        // Keep player stable when grounded and close to surface
         if (isGrounded && velocity.y < 0f && GetDistanceToGround() <= groundProximityThreshold)
+        {
             velocity.y = -2f;
 
-        // Jump
-        if (Input.GetButtonDown("Jump") && isGrounded)
-            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            // (Sound)footstep landing sound when hitting ground after jump
+        }
 
-        // Apply gravity
+        if (Input.GetButtonDown("Jump") && isGrounded)
+        {
+            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            // (Sound)jump sound
+        }
+
         if (velocity.y < 0f)
             velocity.y += gravity * fallMultiplier * Time.deltaTime;
         else
             velocity.y += gravity * Time.deltaTime;
 
-        // Apply vertical motion
         controller.Move(velocity * Time.deltaTime);
+
+        // (Sound)handle footsteps
+        // -looping walking footstep sounds when moving and grounded
+        // -increased footstep frequency and volume when sprinting
+        // -mute footsteps when airborne
+        // -possibly add heavy breathing overlay while sprinting?
+        // -could add short “panting exhale” when stopping sprint suddenly (yes it does that should you ignore the warnings)
     }
 
     void HandleMouseLook()
@@ -99,6 +120,49 @@ public class PlayerController : MonoBehaviour
 
         cam.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
         transform.Rotate(Vector3.up * mouseX);
+    }
+
+    void HandleStamina()
+    {
+        bool wasExhausted = isExhausted;
+
+        if (isSprinting)
+        {
+            currentStamina -= staminaDrainRate * Time.deltaTime;
+
+            if (currentStamina <= 0f)
+            {
+                currentStamina = 0f;
+                isExhausted = true;
+                exhaustionTimer = exhaustionCooldown;
+
+                // (Sound)out of breath
+                // (Sound)footsteps should stop or slow to normal walking pace (this is where your sprinting gets blocked)
+            }
+            else
+            {
+                // (Sound)gradually crossfade normal breathing to heavier breathing when sprinting
+                // (Sound)intensify footsteps slightly while sprinting
+            }
+        }
+        else
+        {
+            if (isExhausted)
+            {
+                exhaustionTimer -= Time.deltaTime;
+                if (exhaustionTimer <= 0f)
+                {
+                    isExhausted = false;
+                    // (Sound)some recovery sign
+                }
+            }
+            else
+            {
+                currentStamina = Mathf.Min(maxSprintStamina, currentStamina + staminaRegenRate * Time.deltaTime);
+
+                // (Sound)gradual return to normal breathing pace as stamina refills
+            }
+        }
     }
 
     bool CheckGrounded()
