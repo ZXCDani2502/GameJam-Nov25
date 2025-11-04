@@ -609,8 +609,8 @@ MonoBehaviour:
   switchSettingsMigration: 1
   HasSourceProject: 1
   HasPlatforms: 1
-  sourceProjectPath: ../../../FMOD Projects/Shhh Game Jam 25/Shhh Game Jam 25.fspro
-  sourceBankPath: ../../../FMOD Projects/Shhh Game Jam 25/Build
+  sourceProjectPath: Assets/FMODProject/Shhh Game Jam 25.fspro
+  sourceBankPath: Assets/FMODProject/Build
   sourceBankPathUnformatted: 
   BankRefreshCooldown: 5
   ShowBankRefreshWindow: 1
