@@ -73,8 +73,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 5.5
-  sprintMultiplier: 1.6
-  sprintAcceleration: 8
+  sprintMultiplier: 1.8
+  sprintAcceleration: 6
   gravity: -30
   jumpHeight: 1.5
   fallMultiplier: 1.15
@@ -311,6 +311,7 @@ GameObject:
   - component: {fileID: 5637293519696721454}
   - component: {fileID: 212124402009445538}
   - component: {fileID: 2139339948354081633}
+  - component: {fileID: 7075571638167317668}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -457,3 +458,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nonRigidbodyVelocity: 0
   attenuationObject: {fileID: 0}
+--- !u!114 &7075571638167317668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6908033027408920886}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b56b73087c0b8b4db21a4f843649575, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableShake: 1
+  defaultShakeMagnitude: 0.05
+  dampingSpeed: 1
+  walkShakeMagnitude: 0.03
+  walkShakeSpeed: 8
+  runShakeMagnitude: 0.05
+  runShakeSpeed: 12
