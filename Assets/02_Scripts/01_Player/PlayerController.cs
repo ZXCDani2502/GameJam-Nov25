@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviour {
     Vector3 velocity;
     float xRotation = 0f;
     bool isGrounded;
+    bool isLanded;
 
     // Sprint variables
     bool isSprinting;
@@ -41,14 +42,16 @@ public class PlayerController : MonoBehaviour {
     bool isExhausted = false;
     float exhaustionTimer = 0f;
 
-    // Footsteps
     [Header("Footsteps")]
     [SerializeField] float walkFootstepTimerLimit = 0.6f;
     [SerializeField] float runFootstepTimerLimit = 0.3f;
-    [SerializeField] float walkNoiseLevel = 3;
-    [SerializeField] float runNoiseLevel = 5;
     float walkFootstepTimer;
     float runFootstepTimer;
+
+    [Header("Noise")]
+    [SerializeField] float walkNoiseLevel = 3;
+    [SerializeField] float runNoiseLevel = 5;
+    [SerializeField] float landNoiseLevel = 10;
 
     CameraShake cameraShake;
 
@@ -109,12 +112,12 @@ public class PlayerController : MonoBehaviour {
                 walkFootstepTimer = 0;
 
                 EventManager.Trigger("sfx-walk");
-                EventManager.Trigger("made-noise", walkNoiseLevel);
+                EventManager.Trigger("add-noise", walkNoiseLevel);
             }
             if (runFootstepTimer > runFootstepTimerLimit) {
                 runFootstepTimer = 0;
                 EventManager.Trigger("sfx-run");
-                EventManager.Trigger("made-noise", runNoiseLevel);
+                EventManager.Trigger("add-noise", runNoiseLevel);
             }
         }
 
@@ -122,20 +125,22 @@ public class PlayerController : MonoBehaviour {
         #region Jump
         isGrounded = CheckGrounded();
 
-        if (isGrounded && velocity.y < 0f && GetDistanceToGround() <= groundProximityThreshold) {
+        // landing
+        if (!isLanded && velocity.y < 0f && GetDistanceToGround() <= groundProximityThreshold) {
             velocity.y = -2f;
-
+            isLanded = true;
             if (cameraShake != null)
-                cameraShake.Shake(0.15f, 0.1f); // small landing shake
-            // (Sound)footstep landing sound when hitting ground after jump
+                cameraShake.Shake(0.05f, 0.01f); // small landing shake
+            EventManager.Trigger("sfx-land");
+            EventManager.Trigger("add-noise", landNoiseLevel);
         }
 
         if (Input.GetButtonDown("Jump") && isGrounded) {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
-
-            if (cameraShake != null)
-                cameraShake.Shake(0.1f, 0.08f); // subtle jump shake
-            // (Sound)jump sound
+            isLanded = false;
+            //if (cameraShake != null)
+            //    cameraShake.Shake(0.1f, 0.08f); // subtle jump shake
+            EventManager.Trigger("sfx-jump");
         }
 
         if (velocity.y < 0f)

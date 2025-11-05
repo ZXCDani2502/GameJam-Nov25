@@ -20,10 +20,10 @@ public class Flashlight : MonoBehaviour {
                 light.enabled = true;
                 EventManager.Trigger("sfx-light-on");
             }
-            EventManager.Trigger("made-noise", switchNoiseAmount);
+            EventManager.Trigger("add-noise", switchNoiseAmount);
         }
         if (light.enabled) {
-            EventManager.Trigger("made-noise", buzzNoiseAmount * Time.deltaTime);
+            EventManager.Trigger("add-noise", buzzNoiseAmount * Time.deltaTime);
         }
     }
 }
