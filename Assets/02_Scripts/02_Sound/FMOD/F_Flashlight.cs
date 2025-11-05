@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class F_Flashlight : MonoBehaviour {
     const string EVENT_PATH = "event:/Items/Lamp";
+    EventInstance buzz;
 
     void OnEnable() {
         EventManager.Subscribe("sfx-light-on", PlayOnEvent);
@@ -18,11 +19,14 @@ public class F_Flashlight : MonoBehaviour {
 
     void PlayOnEvent() {
         EventInstance on = RuntimeManager.CreateInstance(EVENT_PATH);
+        buzz = RuntimeManager.CreateInstance(EVENT_PATH);
         RuntimeManager.AttachInstanceToGameObject(on, transform, true);
+        RuntimeManager.AttachInstanceToGameObject(buzz, transform, true);
 
+        buzz.setParameterByName("LightSwitch", 2, false); // 2 is buzz
+        buzz.start();
 
         on.setParameterByName("LightSwitch", 1, false); // 1 is on
-
         on.start();
         on.release();
     }
@@ -31,10 +35,9 @@ public class F_Flashlight : MonoBehaviour {
         EventInstance off = RuntimeManager.CreateInstance(EVENT_PATH);
         RuntimeManager.AttachInstanceToGameObject(off, transform, true);
 
-        // turn off buzzing
+        buzz.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
 
         off.setParameterByName("LightSwitch", 3, false); // 3 is off
-
         off.start();
         off.release();
     }
