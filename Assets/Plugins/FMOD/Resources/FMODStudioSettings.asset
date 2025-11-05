@@ -143,15 +143,15 @@ MonoBehaviour:
     HasValue: 0
   displaySortOrder: 0
   childIdentifiers:
+  - 0f8eb3f400726694eb47beb1a9f94ce8
   - 46fbfdf3fc43db0458918377fd40293e
+  - 2fea114e74ecf3c4f920e1d5cc1c4c40
   - e7a046c753c3c3d4aacc91f6597f310d
+  - 52eb9df5db46521439908db3a29a1bbb
   - 2c5177b11d81d824dbb064f9ac8527da
   - b7716510a1f36934c87976f3a81dbf3d
-  - 2fea114e74ecf3c4f920e1d5cc1c4c40
-  - de700ef3f37a49b58a57ae3addf01ad9
   - c88d16e5272a4e241b0ef0ac2e53b73d
-  - 0f8eb3f400726694eb47beb1a9f94ce8
-  - 52eb9df5db46521439908db3a29a1bbb
+  - de700ef3f37a49b58a57ae3addf01ad9
   - fd7c55dab0fce234b8c25f6ffca523c1
   codecChannels:
     Value: []
@@ -610,7 +610,7 @@ MonoBehaviour:
   HasSourceProject: 0
   HasPlatforms: 0
   sourceProjectPath: ../../../FMOD Projects/Shhh Game Jam 25/Shhh Game Jam 25.fspro
-  sourceBankPath: Assets/FMODBanks
+  sourceBankPath: Assets/FMODBanks/Desktop
   sourceBankPathUnformatted: 
   BankRefreshCooldown: 5
   ShowBankRefreshWindow: 1
@@ -651,18 +651,18 @@ MonoBehaviour:
   HideSetupWizard: 1
   LastEventReferenceScanVersion: 131633
   Platforms:
-  - {fileID: -7460413002504437173}
+  - {fileID: 8548937086673905993}
   - {fileID: -7314249549994732760}
+  - {fileID: 442518078709595811}
+  - {fileID: -7460413002504437173}
+  - {fileID: -3233517606078362582}
   - {fileID: -5256888386979210083}
+  - {fileID: 4414302122096986218}
   - {fileID: -4553879213183375101}
   - {fileID: -3977769911736363736}
-  - {fileID: -3233517606078362582}
-  - {fileID: -2740755408922149730}
   - {fileID: -492644145010330502}
-  - {fileID: 442518078709595811}
-  - {fileID: 4414302122096986218}
+  - {fileID: -2740755408922149730}
   - {fileID: 8302540576887009075}
-  - {fileID: 8548937086673905993}
   MigratedPlatforms: 0500000000000000060000000a0000000800000009000000120000000c000000150000000b0000000200000001000000
 --- !u!114 &442518078709595811
 MonoBehaviour:
