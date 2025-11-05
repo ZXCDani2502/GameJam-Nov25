@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7531714933274804867}
   - component: {fileID: 5226155300716748594}
   - component: {fileID: 6401622197561847163}
+  - component: {fileID: 3157274722422144189}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -94,6 +95,19 @@ MonoBehaviour:
   runFootstepTimerLimit: 0.3
   walkNoiseLevel: 3
   runNoiseLevel: 5
+--- !u!114 &3157274722422144189
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1130263139884101202}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58c8cb299acc129418f2de7ad16c2244, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  footsteps: {fileID: 3690841451403856564}
 --- !u!1 &3690841451403856564
 GameObject:
   m_ObjectHideFlags: 0
@@ -104,7 +118,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2981709940293383122}
   - component: {fileID: 7342915807908395772}
-  - component: {fileID: 7882051992904061904}
   m_Layer: 0
   m_Name: Footsteps
   m_TagString: Untagged
@@ -128,18 +141,6 @@ Transform:
   m_Father: {fileID: 7531714933274804867}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7342915807908395772
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3690841451403856564}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cf391e919c385d2409262a49c4d5378c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &7882051992904061904
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -286,6 +287,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ae167c1bd31b994dbca53c2620a5a18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  switchNoiseAmount: 6
+  buzzNoiseAmount: 0.5
 --- !u!114 &5127722760469663841
 MonoBehaviour:
   m_ObjectHideFlags: 0
