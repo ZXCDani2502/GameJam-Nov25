@@ -50,24 +50,19 @@ public class PlayerController : MonoBehaviour {
     float walkFootstepTimer;
     float runFootstepTimer;
 
-    // --- ADDED ---
     CameraShake cameraShake;
-    // --------------
 
     void Start() {
         controller = GetComponent<CharacterController>();
         cam = Camera.main.transform;
 
-        // --- ADDED ---
         cameraShake = cam.GetComponent<CameraShake>();
-        // --------------
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
         currentSpeed = speed;
         currentStamina = maxSprintStamina;
-
         // (Sound)baseline idle breathing
     }
 
@@ -92,6 +87,21 @@ public class PlayerController : MonoBehaviour {
 
         Vector3 move = transform.right * x + transform.forward * z;
         controller.Move(move * currentSpeed * Time.deltaTime);
+
+        if (cameraShake != null)
+        {
+            if (move.magnitude > 0.1f && isGrounded)
+            {
+                if (isSprinting)
+                    cameraShake.SetContinuousShake(0.05f, 12f);  // stronger, faster shake
+                else
+                    cameraShake.SetContinuousShake(0.03f, 8f);   // gentle walk sway
+            }
+            else
+            {
+                cameraShake.StopContinuousShake();  // idle → no sway
+            }
+        }
 
         #endregion
         #region Footsteps
@@ -118,22 +128,16 @@ public class PlayerController : MonoBehaviour {
         if (isGrounded && velocity.y < 0f && GetDistanceToGround() <= groundProximityThreshold) {
             velocity.y = -2f;
 
-            // --- ADDED ---
             if (cameraShake != null)
                 cameraShake.Shake(0.15f, 0.1f); // small landing shake
-            // --------------
-
             // (Sound)footstep landing sound when hitting ground after jump
         }
 
         if (Input.GetButtonDown("Jump") && isGrounded) {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
 
-            // --- ADDED ---
             if (cameraShake != null)
                 cameraShake.Shake(0.1f, 0.08f); // subtle jump shake
-            // --------------
-
             // (Sound)jump sound
         }
 
@@ -144,21 +148,14 @@ public class PlayerController : MonoBehaviour {
 
         controller.Move(velocity * Time.deltaTime);
         #endregion
-
-        // (Sound)handle footsteps
-        // -looping walking footstep sounds when moving and grounded
-        // -increased footstep frequency and volume when sprinting
-        // -mute footsteps when airborne
-        // -possibly add heavy breathing overlay while sprinting?
-        // -could add short “panting exhale” when stopping sprint suddenly (yes it does that should you ignore the warnings)
     
         if (Input.GetKeyDown(KeyCode.K)) {
-    if (cameraShake != null) {
-        cameraShake.Shake(0.6f, 0.5f);  // noticeable duration & magnitude
-        Debug.Log("CameraShake triggered!");
-    }
-    else Debug.LogWarning("cameraShake reference is null");
-}
+            if (cameraShake != null) {
+                cameraShake.Shake(0.6f, 0.5f);  // noticeable duration & magnitude
+                Debug.Log("CameraShake triggered!");
+            }
+            else Debug.LogWarning("cameraShake reference is null");
+        }
     }
 
     void HandleMouseLook() {
@@ -184,12 +181,8 @@ public class PlayerController : MonoBehaviour {
                 currentStamina = 0f;
                 isExhausted = true;
                 exhaustionTimer = exhaustionCooldown;
-
-                // (Sound)out of breath
-                // (Sound)footsteps should stop or slow to normal walking pace (this is where your sprinting gets blocked)
             } else {
                 // (Sound)gradually crossfade normal breathing to heavier breathing when sprinting
-                // (Sound)intensify footsteps slightly while sprinting
             }
         } else {
             if (isExhausted) {
@@ -200,8 +193,6 @@ public class PlayerController : MonoBehaviour {
                 }
             } else {
                 currentStamina = Mathf.Min(maxSprintStamina, currentStamina + staminaRegenRate * Time.deltaTime);
-
-                // (Sound)gradual return to normal breathing pace as stamina refills
             }
         }
     }
