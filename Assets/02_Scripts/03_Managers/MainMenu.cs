@@ -6,23 +6,22 @@ using TMPro;
 public class MainMenu : MonoBehaviour
 {
     [Header("UI References")]
-    public GameObject titleText;        // Assign your TextMeshPro "Title"
-    public GameObject optionsPanel;     // Assign your Options Panel
+    public GameObject titleText;        
+    public GameObject optionsPanel;    
 
     [Header("Options UI Elements")]
-    public Slider volumeSlider;         // Assign your VolumeSlider
-    public Toggle fullscreenToggle;     // Assign your FullscreenToggle
-    public TMP_Dropdown resolutionDropdown; // Optional: Assign your Resolution Dropdown
+    public Slider volumeSlider;         
+    public Toggle fullscreenToggle;     
+    public TMP_Dropdown resolutionDropdown; 
 
     private Resolution[] resolutions;
 
     void Start()
     {
-        // --- Hide options at start ---
+        // Hide options at start
         if (optionsPanel != null)
             optionsPanel.SetActive(false);
 
-        // --- Setup Volume Slider ---
         if (volumeSlider != null)
         {
             volumeSlider.minValue = 0f;
@@ -31,14 +30,12 @@ public class MainMenu : MonoBehaviour
             volumeSlider.onValueChanged.AddListener(SetVolume);
         }
 
-        // --- Setup Fullscreen Toggle ---
         if (fullscreenToggle != null)
         {
             fullscreenToggle.isOn = Screen.fullScreen;
             fullscreenToggle.onValueChanged.AddListener(SetFullscreen);
         }
 
-        // --- Setup Resolution Dropdown ---
         if (resolutionDropdown != null)
         {
             resolutions = Screen.resolutions;
