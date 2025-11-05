@@ -25,6 +25,7 @@ public class F_Flashlight : MonoBehaviour {
 
         buzz.setParameterByName("LightSwitch", 2, false); // 2 is buzz
         buzz.start();
+        buzz.release();
 
         on.setParameterByName("LightSwitch", 1, false); // 1 is on
         on.start();
