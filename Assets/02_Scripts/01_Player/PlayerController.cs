@@ -88,37 +88,34 @@ public class PlayerController : MonoBehaviour {
         Vector3 move = transform.right * x + transform.forward * z;
         controller.Move(move * currentSpeed * Time.deltaTime);
 
-        if (cameraShake != null)
-        {
-            if (move.magnitude > 0.1f && isGrounded)
-            {
+        if (cameraShake != null) {
+            if (move.magnitude > 0.1f && isGrounded) {
                 if (isSprinting)
                     cameraShake.SetContinuousShake(0.05f, 12f);  // stronger, faster shake
                 else
                     cameraShake.SetContinuousShake(0.03f, 8f);   // gentle walk sway
-            }
-            else
-            {
+            } else {
                 cameraShake.StopContinuousShake();  // idle → no sway
             }
         }
 
         #endregion
         #region Footsteps
+        if (isGrounded) {
+            if (move != Vector3.zero && !isSprinting) walkFootstepTimer += Time.deltaTime;
+            else if (move != Vector3.zero && isSprinting) runFootstepTimer += Time.deltaTime;
 
-        if (move != Vector3.zero && !isSprinting)  walkFootstepTimer += Time.deltaTime;
-        else if (move != Vector3.zero && isSprinting)  runFootstepTimer += Time.deltaTime;
-        
-        if(walkFootstepTimer > walkFootstepTimerLimit) {
-            walkFootstepTimer = 0;
-            
-            EventManager.Trigger("sfx-walk");
-            EventManager.Trigger("made-noise", walkNoiseLevel);
-        } 
-        if(runFootstepTimer > runFootstepTimerLimit) {
-            runFootstepTimer = 0;
-            EventManager.Trigger("sfx-run");
-            EventManager.Trigger("made-noise", runNoiseLevel);
+            if (walkFootstepTimer > walkFootstepTimerLimit) {
+                walkFootstepTimer = 0;
+
+                EventManager.Trigger("sfx-walk");
+                EventManager.Trigger("made-noise", walkNoiseLevel);
+            }
+            if (runFootstepTimer > runFootstepTimerLimit) {
+                runFootstepTimer = 0;
+                EventManager.Trigger("sfx-run");
+                EventManager.Trigger("made-noise", runNoiseLevel);
+            }
         }
 
         #endregion
@@ -148,13 +145,12 @@ public class PlayerController : MonoBehaviour {
 
         controller.Move(velocity * Time.deltaTime);
         #endregion
-    
+
         if (Input.GetKeyDown(KeyCode.K)) {
             if (cameraShake != null) {
                 cameraShake.Shake(0.6f, 0.5f);  // noticeable duration & magnitude
                 Debug.Log("CameraShake triggered!");
-            }
-            else Debug.LogWarning("cameraShake reference is null");
+            } else Debug.LogWarning("cameraShake reference is null");
         }
     }
 
