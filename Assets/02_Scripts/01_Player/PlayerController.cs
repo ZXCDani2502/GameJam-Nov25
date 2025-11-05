@@ -45,8 +45,8 @@ public class PlayerController : MonoBehaviour {
     [Header("Footsteps")]
     [SerializeField] float walkFootstepTimerLimit = 0.6f;
     [SerializeField] float runFootstepTimerLimit = 0.3f;
-    [SerializeField] int walkNoiseLevel = 3;
-    [SerializeField] int runNoiseLevel = 5;
+    [SerializeField] float walkNoiseLevel = 3;
+    [SerializeField] float runNoiseLevel = 5;
     float walkFootstepTimer;
     float runFootstepTimer;
 

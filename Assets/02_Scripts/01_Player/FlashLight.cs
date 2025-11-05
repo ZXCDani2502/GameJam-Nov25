@@ -3,6 +3,8 @@ using UnityEngine;
 public class Flashlight : MonoBehaviour {
 
     Light light;
+    [SerializeField] float switchNoiseAmount = 6f;
+    [SerializeField] float buzzNoiseAmount = 0.5f;
 
     void Awake() {
         light = GetComponent<Light>();
@@ -18,7 +20,10 @@ public class Flashlight : MonoBehaviour {
                 light.enabled = true;
                 EventManager.Trigger("sfx-light-on");
             }
-            EventManager.Trigger("made-noise", 6);
+            EventManager.Trigger("made-noise", switchNoiseAmount);
+        }
+        if (light.enabled) {
+            EventManager.Trigger("made-noise", buzzNoiseAmount * Time.deltaTime);
         }
     }
 }

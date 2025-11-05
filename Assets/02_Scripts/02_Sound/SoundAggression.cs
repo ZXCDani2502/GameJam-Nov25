@@ -7,10 +7,10 @@ public class SoundAggression : MonoBehaviour
     public float pacifyMultiplier = 2f;
 
     void OnEnable() {
-        EventManager.SubscribeInteger("made-noise", AddAgression);
+        EventManager.SubscribeFloat("made-noise", AddAgression);
     }
     void OnDisable() {
-        EventManager.UnsubscribeInteger("made-noise", AddAgression);
+        EventManager.UnsubscribeFloat("made-noise", AddAgression);
     }
 
     void Update() {
@@ -24,5 +24,5 @@ public class SoundAggression : MonoBehaviour
         aggression -= pacifyMultiplier * Time.deltaTime;
     }
 
-    void AddAgression(int amount) => aggression += amount;
+    void AddAgression(float amount) => aggression += amount;
 }

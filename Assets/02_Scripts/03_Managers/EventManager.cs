@@ -5,6 +5,7 @@ using UnityEngine;
 public class EventManager : MonoBehaviour {
     static readonly Dictionary<string, Action> dictionary = new();
     static readonly Dictionary<string, Action<int>> integerDictionary = new();
+    static readonly Dictionary<string, Action<float>> floatDictionary = new();
 
 
     #region Normal
@@ -41,6 +42,25 @@ public class EventManager : MonoBehaviour {
     public static void Trigger(string _eventName, int value) {
         if (integerDictionary.ContainsKey(_eventName)) {
             integerDictionary[_eventName]?.Invoke(value);
+            Debug.Log("Event Triggered: " + _eventName + " With value: " + value);
+        }
+    }
+    #endregion
+
+    #region Float
+    public static void SubscribeFloat(string _eventName, Action<float> _action) {
+        if (floatDictionary.ContainsKey(_eventName))
+            floatDictionary[_eventName] += _action;
+        else
+            floatDictionary[_eventName] = _action;
+    }
+    public static void UnsubscribeFloat(string _eventName, Action<float> _action) {
+        if (floatDictionary.ContainsKey(_eventName))
+            floatDictionary[_eventName] -= _action;
+    }
+    public static void Trigger(string _eventName, float value) {
+        if (floatDictionary.ContainsKey(_eventName)) {
+            floatDictionary[_eventName]?.Invoke(value);
             Debug.Log("Event Triggered: " + _eventName + " With value: " + value);
         }
     }
