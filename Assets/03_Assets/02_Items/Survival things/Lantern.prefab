@@ -219,7 +219,7 @@ GameObject:
   - component: {fileID: 3063189574523254457}
   - component: {fileID: 6005878305473128096}
   m_Layer: 0
-  m_Name: Farol
+  m_Name: Lantern
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
