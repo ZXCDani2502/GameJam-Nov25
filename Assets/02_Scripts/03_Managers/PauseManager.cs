@@ -11,7 +11,7 @@ public class PauseManager : MonoBehaviour
     [Tooltip("Taste zum Öffnen/Schließen des Pause-Menüs")]
     public KeyCode pauseKey = KeyCode.Escape;
 
-    public bool isPaused = false; // öffentlich, damit andere Scripts es problemlos lesen können
+    public bool isPaused = false; // Public so other scripts can read it
 
     [Header("Player Reference")]
     [Tooltip("Referenz auf den PlayerController")]
@@ -22,7 +22,7 @@ public class PauseManager : MonoBehaviour
         if (pauseMenuUI != null)
             pauseMenuUI.SetActive(false);
 
-        // Sicherheit: Cursor standardmäßig fürs Gameplay sperren
+        // cursor lock as base that's lifted when playing (doesn't work the other way around idk why)
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
@@ -48,7 +48,7 @@ public class PauseManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
-        // Kamera deaktivieren
+        // deactivate camera movement
         if (player != null)
             player.SetLookState(false);
 
@@ -65,7 +65,7 @@ public class PauseManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        // Kamera wieder aktivieren
+        // reactivate camera movement
         if (player != null)
             player.SetLookState(true);
 
