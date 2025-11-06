@@ -110,7 +110,7 @@ public class PlayerController : MonoBehaviour {
                 } else
                     cameraShake.SetContinuousShake(0.03f, 8f);   // gentle walk sway
             } else {
-                cameraShake.StopContinuousShake();  // idle → no sway
+                cameraShake.StopContinuousShake();  // idle -> no sway
             }
         }
 
