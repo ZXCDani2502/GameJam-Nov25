@@ -28,7 +28,7 @@ public class Monster : MonoBehaviour
     void Update() {
         if(!threshold1 && aggression > 25) threshold1 = true;
 
-        if (threshold1) 
+        if (threshold1) StartFollowing();
 
         if (quietTimer > quietTimerLimit) pacifyMultiplier = quietPacifyMult;
         else pacifyMultiplier = initialPacifyMult;
@@ -41,4 +41,10 @@ public class Monster : MonoBehaviour
         aggression += amount;
         quietTimer = 0;
     }
+    
+    void StartFollowing() {
+        GameObject player = GameObject.Find("Player");
+        transform.position = player.transform.position -player.transform.forward * 15f;
+    }
+
 }
