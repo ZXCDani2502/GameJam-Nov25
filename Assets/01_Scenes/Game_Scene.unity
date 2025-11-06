@@ -27,7 +27,7 @@ RenderSettings:
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 2100000, guid: 145f10118a511e54ea1fd04e45855912, type: 2}
-  m_HaloStrength: 0.5
+  m_HaloStrength: 0
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
   m_HaloTexture: {fileID: 0}
@@ -1933,6 +1933,7 @@ MonoBehaviour:
   initialPacifyMult: 2
   quietPacifyMult: 5
   quietTimerLimit: 5
+  monsterDistance: 15
 --- !u!4 &220467243
 Transform:
   m_ObjectHideFlags: 0

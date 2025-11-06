@@ -91,7 +91,7 @@ public class MainMenu : MonoBehaviour
         }
 
         // Start coroutine to load game scene after 10 seconds
-        StartCoroutine(LoadGameAfterDelay(10f));
+        StartCoroutine(LoadGameAfterDelay(22.5f));
     }
 
     private IEnumerator LoadGameAfterDelay(float delay)
