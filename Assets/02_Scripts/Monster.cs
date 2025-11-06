@@ -42,9 +42,9 @@ public class Monster : MonoBehaviour {
     void Update() {
         if (!threshold1Hit && aggression > threshold1) threshold1Hit = true;
         if (!threshold2Hit && aggression > threshold2) threshold2Hit = true;
-        if (!threshold3Hit && aggression > threshold3) { 
-            threshold3Hit = true; 
-            TPOutOfView(); 
+        if (!threshold3Hit && aggression > threshold3) {
+            threshold3Hit = true;
+            TPOutOfView();
         }
 
         if (quietTimer > quietTimerLimit) pacifyMultiplier = quietPacifyMult;
@@ -83,10 +83,9 @@ public class Monster : MonoBehaviour {
         var pt = player.transform;
         //spawn on either the left or the right of the player
         transform.position = Random.Range(0, 1) == 0 ? pt.position + pt.right * monsterBaseDistance : pt.position - pt.right * monsterBaseDistance;
-
-        if (Physics.Raycast(transform.position + new Vector3(0, 10, 0), Vector3.down, out rayHit, rayDistance, LayerMask.GetMask("Ground"))) {
+        if (Physics.Raycast(transform.position + new Vector3(0, 10, 0), Vector3.down, out rayHit, rayDistance, LayerMask.GetMask("Ground")))
             transform.position = new(transform.position.x, rayHit.point.y + 2f, transform.position.z);
-        }
+        transform.LookAt(pt);
 
         EventManager.Trigger("sfx-heavy");
     }
