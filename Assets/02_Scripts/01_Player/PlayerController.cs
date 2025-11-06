@@ -128,7 +128,7 @@ public class PlayerController : MonoBehaviour {
             }
             if (runFootstepTimer > runFootstepTimerLimit) {
                 runFootstepTimer = 0;
-                EventManager.Trigger("sfx-run-step-step");
+                EventManager.Trigger("sfx-run-step");
                 EventManager.Trigger("add-noise", runNoiseLevel);
             }
         }

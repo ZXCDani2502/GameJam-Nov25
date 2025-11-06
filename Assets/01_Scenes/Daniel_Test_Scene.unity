@@ -226,15 +226,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7553156947269502916, guid: f81d218081690814b8a78230756e2dfc, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 778.05
+      value: 778.72
       objectReference: {fileID: 0}
     - target: {fileID: 7553156947269502916, guid: f81d218081690814b8a78230756e2dfc, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 95.56
+      value: 97.39
       objectReference: {fileID: 0}
     - target: {fileID: 7553156947269502916, guid: f81d218081690814b8a78230756e2dfc, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 99.9
+      value: 114.79
       objectReference: {fileID: 0}
     - target: {fileID: 7553156947269502916, guid: f81d218081690814b8a78230756e2dfc, type: 3}
       propertyPath: m_LocalRotation.w
@@ -506,6 +506,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2035077541}
   - component: {fileID: 2035077540}
+  - component: {fileID: 2035077542}
   m_Layer: 0
   m_Name: Monster
   m_TagString: Untagged
@@ -538,12 +539,24 @@ Transform:
   m_GameObject: {fileID: 2035077539}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 772.91455, y: 65.936165, z: 138.77525}
+  m_LocalPosition: {x: 772.91455, y: 100.1, z: 138.77525}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2035077542
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2035077539}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21667b0960f0d5046b723dde0609a3ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &6065543215806887845
 PrefabInstance:
   m_ObjectHideFlags: 0

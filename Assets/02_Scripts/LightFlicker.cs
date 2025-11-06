@@ -14,11 +14,12 @@ public class LightFlicker : MonoBehaviour {
     float lastIntensity;
 
     //color
+    public float maxColorChange = 0.04f;
     Color targetColor;
     Color lastColor;
     Color originalColor;
 
-    private void Start() {
+    void Start() {
         Light = GetComponent<Light>();
         originalColor = Light.color;
         originalIntensity = Light.intensity;
@@ -35,9 +36,8 @@ public class LightFlicker : MonoBehaviour {
             targetIntensity = Random.Range(originalIntensity - maxFlicker, originalIntensity + maxFlicker);
             //color
             lastColor = Light.color;
-            targetColor = new Color(Random.Range(originalColor.r - maxFlicker/5, originalColor.r + maxFlicker/5), originalColor.g, originalColor.b);
+            targetColor = new Color(Random.Range(originalColor.r - maxColorChange, originalColor.r + maxColorChange), originalColor.g, originalColor.b);
         }
-
         //intensity
         Light.intensity = Mathf.Lerp(lastIntensity, targetIntensity, timer / interval);
         //color
