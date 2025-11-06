@@ -4,25 +4,31 @@ using UnityEngine.SceneManagement;
 public class PauseManager : MonoBehaviour
 {
     [Header("UI References")]
-    [Tooltip("The pause menu UI GameObject (Canvas oder Panel)")]
+    [Tooltip("Das Pause-Menü UI (Canvas oder Panel)")]
     public GameObject pauseMenuUI;
 
     [Header("Settings")]
     [Tooltip("Taste zum Öffnen/Schließen des Pause-Menüs")]
     public KeyCode pauseKey = KeyCode.Escape;
 
-    private bool isPaused = false;
+    public bool isPaused = false; // öffentlich, damit andere Scripts es problemlos lesen können
+
+    [Header("Player Reference")]
+    [Tooltip("Referenz auf den PlayerController")]
+    public PlayerController player;
 
     void Start()
     {
-        // Stelle sicher, dass das Menü zu Beginn unsichtbar ist
         if (pauseMenuUI != null)
             pauseMenuUI.SetActive(false);
+
+        // Sicherheit: Cursor standardmäßig fürs Gameplay sperren
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     void Update()
     {
-        // Escape zum toggeln
         if (Input.GetKeyDown(pauseKey))
         {
             if (isPaused)
@@ -37,9 +43,15 @@ public class PauseManager : MonoBehaviour
         if (pauseMenuUI != null)
             pauseMenuUI.SetActive(true);
 
-        Time.timeScale = 0f; // Spiel pausieren
+        Time.timeScale = 0f;
+
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+
+        // Kamera deaktivieren
+        if (player != null)
+            player.SetLookState(false);
+
         isPaused = true;
     }
 
@@ -48,9 +60,15 @@ public class PauseManager : MonoBehaviour
         if (pauseMenuUI != null)
             pauseMenuUI.SetActive(false);
 
-        Time.timeScale = 1f; // Spiel fortsetzen
+        Time.timeScale = 1f;
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        // Kamera wieder aktivieren
+        if (player != null)
+            player.SetLookState(true);
+
         isPaused = false;
     }
 

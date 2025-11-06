@@ -55,6 +55,14 @@ public class PlayerController : MonoBehaviour {
 
     CameraShake cameraShake;
 
+    // Mouse look lock flag
+    bool allowLook = true;
+
+    // External control for PauseManager
+    public void SetLookState(bool canLook) {
+        allowLook = canLook;
+    }
+
     void Start() {
         controller = GetComponent<CharacterController>();
         cam = Camera.main.transform;
@@ -70,10 +78,14 @@ public class PlayerController : MonoBehaviour {
     }
 
     void Update() {
-        HandleMouseLook();
-        HandleMovement();
-        HandleStamina();
-    }
+    // Stoppe alles, wenn das Spiel pausiert ist
+    if (Time.timeScale == 0f)
+        return;
+
+    HandleMouseLook();
+    HandleMovement();
+    HandleStamina();
+}
 
     void HandleMovement() {
         #region WalkRun
@@ -161,6 +173,9 @@ public class PlayerController : MonoBehaviour {
 
     void HandleMouseLook() {
         if (!Application.isFocused) return;
+
+        // Stop camera when game is paused
+        if (!allowLook) return;
 
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * sensitivityMultiplier;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * sensitivityMultiplier;
