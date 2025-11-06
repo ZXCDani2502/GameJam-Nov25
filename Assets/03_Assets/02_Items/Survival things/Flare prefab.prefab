@@ -276,4 +276,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxInterval: 0.2
-  maxFlicker: 1
+  maxFlicker: 20
+  maxColorChange: 0.04
