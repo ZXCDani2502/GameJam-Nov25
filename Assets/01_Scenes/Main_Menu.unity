@@ -290,7 +290,7 @@ MonoBehaviour:
     but hunts by sound alone. As night falls, you set up camp. The others drift to
     sleep easily, but you lie awake, restless.\nEventually, exhaustion takes you\u2026
     \n\nUntil a gunshot shatters the silence.\n\nYou jolt awake\u2026 but not where
-    you thought you\u2019d be."
+    you thought you\u2019d be.\n\nFind out what happened to your friends!!"
   volumeSlider: {fileID: 553145061}
   fullscreenToggle: {fileID: 365785182}
   resolutionDropdown: {fileID: 0}
@@ -3192,7 +3192,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -99.999985, y: -62.999992}
+  m_AnchoredPosition: {x: -100, y: -63}
   m_SizeDelta: {x: -1520, y: -880}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1810595096
