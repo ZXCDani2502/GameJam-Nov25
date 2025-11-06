@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5226155300716748594}
   - component: {fileID: 6401622197561847163}
   - component: {fileID: 3157274722422144189}
+  - component: {fileID: 6665387023655523239}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -87,7 +88,7 @@ MonoBehaviour:
   groundCheckOffset: 0.05
   groundCheckRadius: 0.45
   groundProximityThreshold: 0.1
-  maxSprintStamina: 5
+  maxStamina: 5
   staminaDrainRate: 1
   staminaRegenRate: 0.5
   exhaustionCooldown: 4
@@ -109,6 +110,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   footsteps: {fileID: 3690841451403856564}
+--- !u!114 &6665387023655523239
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1130263139884101202}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 285e899a7a661a94ab8bacfaa115d2eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3690841451403856564
 GameObject:
   m_ObjectHideFlags: 0

@@ -2,19 +2,19 @@ using FMOD.Studio;
 using FMODUnity;
 using UnityEngine;
 
-public class F_Footsteps : MonoBehaviour {
+public class F_Darksteps : MonoBehaviour {
     int materialValue;
     RaycastHit rayHit;
     float rayDistance = 0.3f;
-    const string EVENT_PATH = "event:/Character/Footsteps";
+    const string EVENT_PATH = "event:/Character/DarkSteps";
 
     void OnEnable() {
-        EventManager.Subscribe("sfx-walk-step", PlayWalkEvent);
-        EventManager.Subscribe("sfx-run-step", PlayRunEvent);
+        EventManager.Subscribe("sfx", PlayWalkEvent);
+        //EventManager.Subscribe("sfx", PlayRunEvent);
     }
     void OnDisable() {
-        EventManager.Unsubscribe("sfx-walk-step", PlayWalkEvent);
-        EventManager.Unsubscribe("sfx-run-step", PlayRunEvent);
+        EventManager.Unsubscribe("sfx", PlayWalkEvent);
+        //EventManager.Unsubscribe("sfx", PlayRunEvent);
     }
 
 
@@ -30,22 +30,18 @@ public class F_Footsteps : MonoBehaviour {
         walk.start();
         walk.release();
     }
-    
-    void PlayRunEvent() {
-        MaterialCheck();
-        EventInstance run = RuntimeManager.CreateInstance(EVENT_PATH);
-        RuntimeManager.AttachInstanceToGameObject(run, transform, true);
 
-
-        run.setParameterByName("Terrain", materialValue);
-        run.setParameterByName("WalkRun", 1, false); //1 is run
-
-        run.start();
-        run.release();
-    }
 
     void MaterialCheck() {
         if (Physics.Raycast(transform.position, Vector3.down, out rayHit, rayDistance, LayerMask.GetMask("Ground"))) {
+            switch (rayHit.collider.tag) {
+                case "Grass": materialValue = 0; break;
+                case "Gravel": materialValue = 1; break;
+                case "Wood": materialValue = 2; break;
+                case "Cement": materialValue = 3; break;
+            }
+        }
+        if (Physics.Raycast(transform.position, Vector3.up, out rayHit, rayDistance, LayerMask.GetMask("Ground"))) {
             switch (rayHit.collider.tag) {
                 case "Grass": materialValue = 0; break;
                 case "Gravel": materialValue = 1; break;

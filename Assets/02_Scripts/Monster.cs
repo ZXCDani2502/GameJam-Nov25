@@ -13,10 +13,12 @@ public class Monster : MonoBehaviour
     public float quietTimerLimit = 5;
     float quietTimer;
 
+    RaycastHit rayHit;
+    float rayDistance = 10f;
+
     bool threshold1; //following footsteps
     bool threshold2; 
     bool threshold3;
-
 
     void OnEnable() {
         EventManager.SubscribeFloat("add-noise", AddAgression);
@@ -26,9 +28,9 @@ public class Monster : MonoBehaviour
     }
 
     void Update() {
-        if(!threshold1 && aggression > 25) threshold1 = true;
+        if(!threshold1 && aggression > 0) threshold1 = true;
 
-        if (threshold1) StartFollowing();
+        if (true) StartFollowing();
 
         if (quietTimer > quietTimerLimit) pacifyMultiplier = quietPacifyMult;
         else pacifyMultiplier = initialPacifyMult;
@@ -44,7 +46,15 @@ public class Monster : MonoBehaviour
     
     void StartFollowing() {
         GameObject player = GameObject.Find("Player");
-        transform.position = player.transform.position -player.transform.forward * 15f;
+        transform.position = player.transform.position - player.transform.forward * 15f;
+
+        if (Physics.Raycast(transform.position, Vector3.down, out rayHit, rayDistance, LayerMask.GetMask("Ground"))) {
+            Debug.Log("down cast " + rayHit.point);
+            transform.position = new(transform.position.x, rayHit.point.y + 2f, transform.position.z);
+        } else if (Physics.Raycast(transform.position, Vector3.up, out rayHit, rayDistance, LayerMask.GetMask("Ground"))) {
+            transform.position = new(transform.position.x, rayHit.point.y + 2f, transform.position.z);
+        }
+
     }
 
 }

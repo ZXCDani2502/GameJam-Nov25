@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviour {
     public float groundProximityThreshold = 0.2f;
 
     [Header("Sprint Stamina Settings")]
-    public float maxSprintStamina = 5f;
+    public float maxStamina = 5f;
     public float staminaDrainRate = 1f;
     public float staminaRegenRate = 0.5f;
     public float exhaustionCooldown = 4f;
@@ -53,6 +53,9 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] float runNoiseLevel = 5;
     [SerializeField] float landNoiseLevel = 10;
 
+    //Breathing
+    bool f_walk, f_run, f_exhaust;
+
     CameraShake cameraShake;
 
     // Mouse look lock flag
@@ -73,7 +76,7 @@ public class PlayerController : MonoBehaviour {
         Cursor.visible = false;
 
         currentSpeed = speed;
-        currentStamina = maxSprintStamina;
+        currentStamina = maxStamina;
         // (Sound)baseline idle breathing
     }
 
@@ -191,7 +194,11 @@ public class PlayerController : MonoBehaviour {
         bool wasExhausted = isExhausted;
 
         if (isSprinting) {
-            EventManager.Trigger("sfx-run-breath");
+            if (!f_run) {
+                EventManager.Trigger("sfx-run-breath", 1 - currentStamina/maxStamina);
+                f_run = true;
+                f_exhaust = f_walk = false;
+            }
             currentStamina -= staminaDrainRate * Time.deltaTime;
 
             if (currentStamina <= 0f) {
@@ -203,15 +210,23 @@ public class PlayerController : MonoBehaviour {
             }
         } else {
             if (isExhausted) {
-                EventManager.Trigger("sfx-exhausted-breath");
+                if (!f_exhaust) {
+                    EventManager.Trigger("sfx-exhausted-breath");
+                    f_exhaust = true;
+                    f_run = f_walk = false;
+                }
                 exhaustionTimer -= Time.deltaTime;
                 if (exhaustionTimer <= 0f) {
                     isExhausted = false;
                     // (Sound)some recovery sign
                 }
             } else {
-                EventManager.Trigger("sfx-walk-breath");
-                currentStamina = Mathf.Min(maxSprintStamina, currentStamina + staminaRegenRate * Time.deltaTime);
+                if (!f_walk) {
+                    EventManager.Trigger("sfx-walk-breath");
+                    f_walk = true;
+                    f_run = f_exhaust = false;
+                }
+                currentStamina = Mathf.Min(maxStamina, currentStamina + staminaRegenRate * Time.deltaTime);
             }
         }
     }
