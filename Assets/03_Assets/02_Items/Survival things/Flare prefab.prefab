@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 7553156947269502916}
   - component: {fileID: 7213619525667547124}
   - component: {fileID: 4987437205766404915}
+  - component: {fileID: 5190377775906260542}
+  - component: {fileID: 9204097466657667536}
   m_Layer: 0
   m_Name: Flare prefab
   m_TagString: Untagged
@@ -26,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7423254907173107874}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.5791988, y: -0.40562153, z: 0.40562156, w: 0.5791988}
+  m_LocalRotation: {x: -0.5791997, y: -0.4056202, z: 0.4056202, w: 0.5791997}
   m_LocalPosition: {x: -3.654602, y: -4.4814625, z: 12.253784}
   m_LocalScale: {x: 11.487172, y: 11.487172, z: 11.487172}
   m_ConstrainProportionsScale: 0
@@ -87,6 +89,58 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &5190377775906260542
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7423254907173107874}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: Player
+  EventReference:
+    Guid:
+      Data1: 211199485
+      Data2: 1157176431
+      Data3: -859242834
+      Data4: -1528673369
+    Path: event:/Items/Flare
+  Event: 
+  EventPlayTrigger: 3
+  EventStopTrigger: 4
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
+--- !u!135 &9204097466657667536
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7423254907173107874}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &8502963368974107345
 GameObject:
   m_ObjectHideFlags: 0
@@ -98,6 +152,7 @@ GameObject:
   - component: {fileID: 6585761303407343423}
   - component: {fileID: 5415853111995130056}
   - component: {fileID: 8153017830013642193}
+  - component: {fileID: 2101992305995119408}
   m_Layer: 0
   m_Name: FlareLight
   m_TagString: Untagged
@@ -208,3 +263,17 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
+--- !u!114 &2101992305995119408
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8502963368974107345}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 483ebd2ab2332614389a3301fde5f6d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxInterval: 0.2
+  maxFlicker: 1

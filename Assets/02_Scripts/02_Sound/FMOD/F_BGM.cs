@@ -6,7 +6,7 @@ using UnityEngine;
 public class F_BGM : MonoBehaviour {
     public static F_BGM instance; // Singleton
 
-    SoundAggression monster;
+    Monster monster;
 
     const string EVENT_PATH = "event:/Ambiance/BackGround Sound";
 
@@ -26,7 +26,7 @@ public class F_BGM : MonoBehaviour {
         }
         bgm = GetComponent<StudioEventEmitter>();
     }
-    void Start() => monster = GameObject.Find("Monster").GetComponent<SoundAggression>();
+    void Start() => monster = GameObject.Find("Monster").GetComponent<Monster>();
 
     void Update() {
         bgm.SetParameter("Music Amount", monster.aggression / 100f);

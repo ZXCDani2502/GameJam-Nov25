@@ -18,7 +18,7 @@ public class PlayerController : MonoBehaviour {
     public LayerMask groundMask;
     public float groundCheckOffset = 0.02f;
     public float groundCheckRadius = 0.45f;
-    public float groundProximityThreshold = 0.0f;
+    public float groundProximityThreshold = 0.2f;
 
     [Header("Sprint Stamina Settings")]
     public float maxSprintStamina = 5f;

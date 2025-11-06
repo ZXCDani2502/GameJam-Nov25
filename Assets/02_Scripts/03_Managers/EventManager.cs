@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EventManager : MonoBehaviour {
+public class EventManager : MonoBehaviour { //TODO: make generic
     static readonly Dictionary<string, Action> dictionary = new();
     static readonly Dictionary<string, Action<int>> integerDictionary = new();
     static readonly Dictionary<string, Action<float>> floatDictionary = new();

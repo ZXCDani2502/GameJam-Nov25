@@ -1,0 +1,44 @@
+using System;
+using UnityEngine;
+
+public class Monster : MonoBehaviour
+{
+    [Range(0,100)]public float aggression = 0;
+    [Tooltip("How fast aggression reduces normaly")]
+    public float initialPacifyMult = 2f;
+    [Tooltip("How fast aggression reduces when the player is quiet for long enough")]
+    public float quietPacifyMult = 5f;
+    float pacifyMultiplier;
+    [Tooltip("How many seconds the player has to be quiet for the aggression to reduce faster")]
+    public float quietTimerLimit = 5;
+    float quietTimer;
+
+    bool threshold1; //following footsteps
+    bool threshold2; 
+    bool threshold3;
+
+
+    void OnEnable() {
+        EventManager.SubscribeFloat("add-noise", AddAgression);
+    }
+    void OnDisable() {
+        EventManager.UnsubscribeFloat("add-noise", AddAgression);
+    }
+
+    void Update() {
+        if(!threshold1 && aggression > 25) threshold1 = true;
+
+        if (threshold1) 
+
+        if (quietTimer > quietTimerLimit) pacifyMultiplier = quietPacifyMult;
+        else pacifyMultiplier = initialPacifyMult;
+
+
+        aggression -= pacifyMultiplier * Time.deltaTime;
+    }
+
+    void AddAgression(float amount) {
+        aggression += amount;
+        quietTimer = 0;
+    }
+}
