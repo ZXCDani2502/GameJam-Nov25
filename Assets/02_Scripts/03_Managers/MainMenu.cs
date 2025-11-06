@@ -2,12 +2,18 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections; // Needed for Coroutines
 
 public class MainMenu : MonoBehaviour
 {
     [Header("UI References")]
-    public GameObject titleText;        
+    public TMP_Text titleTextTMP;          // Updated to TMP_Text
     public GameObject optionsPanel;    
+
+    [Header("Story UI")]
+    public GameObject storyPanel;            // Panel for story cutscene
+    public TMP_Text storyText;               // Text component inside the panel
+    [TextArea] public string storyContent;   // Your story text
 
     [Header("Options UI Elements")]
     public Slider volumeSlider;         
@@ -21,6 +27,10 @@ public class MainMenu : MonoBehaviour
         // Hide options at start
         if (optionsPanel != null)
             optionsPanel.SetActive(false);
+
+        // Hide story panel at start
+        if (storyPanel != null)
+            storyPanel.SetActive(false);
 
         if (volumeSlider != null)
         {
@@ -67,19 +77,39 @@ public class MainMenu : MonoBehaviour
     // --- MAIN MENU BUTTONS ---
     public void PlayGame()
     {
+        // Hide main menu title text
+        if (titleTextTMP != null) titleTextTMP.gameObject.SetActive(false);
+        if (optionsPanel != null) optionsPanel.SetActive(false);
+
+        // Show story panel
+        if (storyPanel != null)
+        {
+            storyPanel.SetActive(true);
+
+            if (storyText != null)
+                storyText.text = storyContent; // Set your story text
+        }
+
+        // Start coroutine to load game scene after 10 seconds
+        StartCoroutine(LoadGameAfterDelay(10f));
+    }
+
+    private IEnumerator LoadGameAfterDelay(float delay)
+    {
+        yield return new WaitForSecondsRealtime(delay); // uses real time, ignores Time.timeScale
         SceneManager.LoadScene("Game_Scene");
     }
 
     public void OpenOptions()
     {
         if (optionsPanel != null) optionsPanel.SetActive(true);
-        if (titleText != null) titleText.SetActive(false);
+        if (titleTextTMP != null) titleTextTMP.gameObject.SetActive(false);
     }
 
     public void CloseOptions()
     {
         if (optionsPanel != null) optionsPanel.SetActive(false);
-        if (titleText != null) titleText.SetActive(true);
+        if (titleTextTMP != null) titleTextTMP.gameObject.SetActive(true);
     }
 
     public void QuitGame()
