@@ -93,9 +93,9 @@ public class PlayerController : MonoBehaviour {
 
         if (cameraShake != null) {
             if (move.magnitude > 0.1f && isGrounded) {
-                if (isSprinting)
+                if (isSprinting) {
                     cameraShake.SetContinuousShake(0.05f, 12f);  // stronger, faster shake
-                else
+                } else
                     cameraShake.SetContinuousShake(0.03f, 8f);   // gentle walk sway
             } else {
                 cameraShake.StopContinuousShake();  // idle → no sway
@@ -111,12 +111,12 @@ public class PlayerController : MonoBehaviour {
             if (walkFootstepTimer > walkFootstepTimerLimit) {
                 walkFootstepTimer = 0;
 
-                EventManager.Trigger("sfx-walk");
+                EventManager.Trigger("sfx-walk-step");
                 EventManager.Trigger("add-noise", walkNoiseLevel);
             }
             if (runFootstepTimer > runFootstepTimerLimit) {
                 runFootstepTimer = 0;
-                EventManager.Trigger("sfx-run");
+                EventManager.Trigger("sfx-run-step-step");
                 EventManager.Trigger("add-noise", runNoiseLevel);
             }
         }
@@ -176,6 +176,7 @@ public class PlayerController : MonoBehaviour {
         bool wasExhausted = isExhausted;
 
         if (isSprinting) {
+            EventManager.Trigger("sfx-run-breath");
             currentStamina -= staminaDrainRate * Time.deltaTime;
 
             if (currentStamina <= 0f) {
@@ -187,12 +188,14 @@ public class PlayerController : MonoBehaviour {
             }
         } else {
             if (isExhausted) {
+                EventManager.Trigger("sfx-exhausted-breath");
                 exhaustionTimer -= Time.deltaTime;
                 if (exhaustionTimer <= 0f) {
                     isExhausted = false;
                     // (Sound)some recovery sign
                 }
             } else {
+                EventManager.Trigger("sfx-walk-breath");
                 currentStamina = Mathf.Min(maxSprintStamina, currentStamina + staminaRegenRate * Time.deltaTime);
             }
         }

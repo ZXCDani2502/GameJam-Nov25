@@ -9,12 +9,12 @@ public class F_Footsteps : MonoBehaviour {
     const string EVENT_PATH = "event:/Character/Footsteps";
 
     void OnEnable() {
-        EventManager.Subscribe("sfx-walk", PlayWalkEvent);
-        EventManager.Subscribe("sfx-run", PlayRunEvent);
+        EventManager.Subscribe("sfx-walk-step", PlayWalkEvent);
+        EventManager.Subscribe("sfx-run-step", PlayRunEvent);
     }
     void OnDisable() {
-        EventManager.Unsubscribe("sfx-walk", PlayWalkEvent);
-        EventManager.Unsubscribe("sfx-run", PlayRunEvent);
+        EventManager.Unsubscribe("sfx-walk-step", PlayWalkEvent);
+        EventManager.Unsubscribe("sfx-run-step", PlayRunEvent);
     }
 
 
