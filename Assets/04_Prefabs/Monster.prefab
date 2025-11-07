@@ -51,9 +51,9 @@ MonoBehaviour:
   initialPacifyMult: 2
   quietPacifyMult: 5
   quietTimerLimit: 3
-  monsterBaseDistance: 25
+  monsterBaseDistance: 20
   followTimerLimit: 0.6
-  lookMonsterTimerLimit: 3
+  lookMonsterTimerLimit: 2.35
   distanceFromPlayerToChase: 50
 --- !u!114 &7393265031615467826
 MonoBehaviour:
@@ -67,7 +67,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21667b0960f0d5046b723dde0609a3ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  volume: 30
+  volume: 50
 --- !u!1 &2703938715109032652
 GameObject:
   m_ObjectHideFlags: 0

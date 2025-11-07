@@ -92,11 +92,18 @@ MonoBehaviour:
   staminaDrainRate: 1
   staminaRegenRate: 0.5
   exhaustionCooldown: 4
+  victoryPanel: {fileID: 0}
+  victoryTitleText: {fileID: 0}
+  victoryInstructionText: {fileID: 0}
+  victoryDelay: 3
+  victoryTitleContent: "You found them \nBut...\n\nYour friends died. They were snoring
+    too loud. He didn't like that."
+  victoryInstructionContent: Press Enter to return to Main Menu
   walkFootstepTimerLimit: 0.6
   runFootstepTimerLimit: 0.3
   walkNoiseLevel: 1
   runNoiseLevel: 2
-  landNoiseLevel: 3
+  landNoiseLevel: 5
 --- !u!114 &3157274722422144189
 MonoBehaviour:
   m_ObjectHideFlags: 0
