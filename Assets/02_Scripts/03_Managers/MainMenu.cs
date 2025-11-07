@@ -32,6 +32,9 @@ public class MainMenu : MonoBehaviour
 
     void Start()
     {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
         if (optionsPanel != null) optionsPanel.SetActive(false);
         if (storyPanel != null) storyPanel.SetActive(false);
 
