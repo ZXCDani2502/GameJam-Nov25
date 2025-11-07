@@ -11,7 +11,7 @@ public class F_Monster : MonoBehaviour {
     const string EVENT_PATH1 = "event:/Character/DarkSteps";
     const string EVENT_PATH2 = "event:/Character/MonsterSteps";
 
-    public float Volume = 4;
+    public float volume = 4;
 
     void OnEnable() {
         EventManager.Subscribe("sfx-follow", PlayFollowEvent);
@@ -29,7 +29,7 @@ public class F_Monster : MonoBehaviour {
         EventInstance follow = RuntimeManager.CreateInstance(EVENT_PATH1);
         RuntimeManager.AttachInstanceToGameObject(follow, transform, true);
 
-        follow.setVolume(4);
+        follow.setVolume(volume);
 
         follow.setParameterByName("Terrain", materialValue);
         follow.setParameterByName("WalkRun", 1, false);

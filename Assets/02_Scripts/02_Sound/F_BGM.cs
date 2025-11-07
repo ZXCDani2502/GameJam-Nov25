@@ -8,12 +8,12 @@ public class F_BGM : MonoBehaviour {
 
     Monster monster;
 
-    const string EVENT_PATH = "event:/Ambiance/BackGround Sound";
+    //const string EVENT_PATH = "event:/Ambiance/BackGround Sound";
+    //bool bgmStarted = false;
+    //float bgmTimer;
 
     [Header("Background Music")]
-    float bgmTimer;
     [SerializeField] float bgmTimerLimit = 60f;
-    bool bgmStarted = false;
     StudioEventEmitter bgm;
 
 

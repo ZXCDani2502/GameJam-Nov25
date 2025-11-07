@@ -496,6 +496,50 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 492a9582aeca7ca4fb7cfc8b282f97d4, type: 3}
+--- !u!1 &970889143
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 970889145}
+  - component: {fileID: 970889144}
+  m_Layer: 0
+  m_Name: DeathManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &970889144
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 970889143}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fb7ebd451c925c489a11d2292ea44fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &970889145
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 970889143}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 749.482, y: 96.839874, z: 146.51038}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &80295931423949330
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -504,6 +548,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1210057076755804011, guid: e987927d9dccf614d9083a49e3f58645, type: 3}
+      propertyPath: aggression
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1802975569460701194, guid: e987927d9dccf614d9083a49e3f58645, type: 3}
       propertyPath: m_Name
       value: Monster
@@ -547,10 +595,6 @@ PrefabInstance:
     - target: {fileID: 4555978927374925013, guid: e987927d9dccf614d9083a49e3f58645, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7393265031615467826, guid: e987927d9dccf614d9083a49e3f58645, type: 3}
-      propertyPath: Volume
-      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -625,3 +669,4 @@ SceneRoots:
   - {fileID: 80295931423949330}
   - {fileID: 6065543215806887845}
   - {fileID: 406390200}
+  - {fileID: 970889145}

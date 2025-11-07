@@ -19,7 +19,7 @@ public class Monster : MonoBehaviour {
     [Tooltip("Ambience randomly mutes")]
     int threshold2;
     [Tooltip("Spawn eyes out of view")]
-    int threshold3 = 85;
+    int threshold3 = 98;
 
     bool threshold1Hit; //following footsteps
     bool threshold2Hit;
@@ -27,13 +27,17 @@ public class Monster : MonoBehaviour {
 
     [Header("Monster Events")]
     public float monsterBaseDistance = 15f;
-    [SerializeField] float followTimerLimit = 0.6f;
-    [SerializeField] float followTimer;
-
-
     GameObject player;
     RaycastHit rayHit;
     float rayDistance = Mathf.Infinity;
+    //follow
+    [SerializeField] float followTimerLimit = 0.6f;
+    float followTimer;
+    //heavy
+    int randomDirection;
+    [SerializeField] float lookMonsterTimerLimit = 1.5f;
+    float lookMonsterTimer;
+    float distanceFromPlayerToChase = 50;
 
     void OnEnable() => EventManager.SubscribeFloat("add-noise", AddAgression);
     void OnDisable() => EventManager.UnsubscribeFloat("add-noise", AddAgression);
@@ -45,6 +49,7 @@ public class Monster : MonoBehaviour {
         if (!threshold3Hit && aggression > threshold3) {
             threshold3Hit = true;
             TPOutOfView();
+            randomDirection = Random.Range(0, 2);
         }
 
         if (quietTimer > quietTimerLimit) pacifyMultiplier = quietPacifyMult;
@@ -57,8 +62,26 @@ public class Monster : MonoBehaviour {
 
     void FixedUpdate() {
         if (threshold1Hit) StartFollowing();
+        if (threshold3Hit) { 
+        CheckLookingAtMonster();
+            if (Vector3.Distance(transform.position, player.transform.position) > distanceFromPlayerToChase) {
+                TPOutOfView();
+            }
+        }
     }
 
+    void CheckLookingAtMonster() {
+        var ct = GameObject.Find("Main Camera").transform;
+        transform.LookAt(ct);
+        Debug.DrawRay(ct.position, ct.forward * 30, Color.green);
+        if (Physics.Raycast(ct.position, ct.forward, out _, rayDistance, LayerMask.GetMask("Monster"))) {
+            if (lookMonsterTimer > lookMonsterTimerLimit) {
+                EventManager.Trigger("death-state");
+            }
+            else 
+                lookMonsterTimer += Time.deltaTime;
+        }
+    }
 
     void AddAgression(float amount) {
         aggression += amount;
@@ -67,7 +90,7 @@ public class Monster : MonoBehaviour {
 
     void StartFollowing() {
         if (threshold3Hit) return;
-        transform.position = player.transform.position - player.transform.forward * monsterBaseDistance;
+        transform.position = player.transform.position - player.transform.forward * monsterBaseDistance * Random.Range(0.7f, 1.3f); // a bit of variation
 
         if (Physics.Raycast(transform.position + new Vector3(0, 10, 0), Vector3.down, out rayHit, rayDistance, LayerMask.GetMask("Ground"))) {
             transform.position = new(transform.position.x, rayHit.point.y, transform.position.z);
@@ -82,7 +105,7 @@ public class Monster : MonoBehaviour {
     void TPOutOfView() {
         var pt = player.transform;
         //spawn on either the left or the right of the player
-        transform.position = Random.Range(0, 1) == 0 ? pt.position + pt.right * monsterBaseDistance : pt.position - pt.right * monsterBaseDistance;
+        transform.position = randomDirection == 0 ? pt.position + pt.right * monsterBaseDistance : pt.position - pt.right * monsterBaseDistance;
         if (Physics.Raycast(transform.position + new Vector3(0, 10, 0), Vector3.down, out rayHit, rayDistance, LayerMask.GetMask("Ground")))
             transform.position = new(transform.position.x, rayHit.point.y + 2f, transform.position.z);
         transform.LookAt(pt);

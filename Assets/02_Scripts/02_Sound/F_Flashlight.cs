@@ -14,6 +14,7 @@ public class F_Flashlight : MonoBehaviour {
     void OnDisable() {
         EventManager.Unsubscribe("sfx-light-on", PlayOnEvent);
         EventManager.Unsubscribe("sfx-light-off", PlayOffEvent);
+        buzz.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
     }
 
 
