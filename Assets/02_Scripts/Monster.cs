@@ -48,6 +48,7 @@ public class Monster : MonoBehaviour {
         if (!threshold2Hit && aggression > threshold2) threshold2Hit = true;
         if (!threshold3Hit && aggression > threshold3) {
             threshold3Hit = true;
+            GameObject.Find("Flashlight").SetActive(false);
             TPOutOfView();
             randomDirection = Random.Range(0, 2);
         }
