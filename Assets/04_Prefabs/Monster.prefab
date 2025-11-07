@@ -50,10 +50,11 @@ MonoBehaviour:
   aggression: 0
   initialPacifyMult: 2
   quietPacifyMult: 5
-  quietTimerLimit: 5
-  monsterBaseDistance: 15
+  quietTimerLimit: 3
+  monsterBaseDistance: 25
   followTimerLimit: 0.6
-  lookMonsterTimerLimit: 1.5
+  lookMonsterTimerLimit: 3
+  distanceFromPlayerToChase: 50
 --- !u!114 &7393265031615467826
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -66,7 +67,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21667b0960f0d5046b723dde0609a3ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  volume: 10
+  volume: 30
 --- !u!1 &2703938715109032652
 GameObject:
   m_ObjectHideFlags: 0
@@ -183,6 +184,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4555978927374925013}
     m_Modifications:
+    - target: {fileID: 1209988081940709652, guid: 6b855d2c95158344e957e9f1fd35008e, type: 3}
+      propertyPath: m_Range
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 2141139956306368575, guid: 6b855d2c95158344e957e9f1fd35008e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -223,9 +228,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2875026581279175514, guid: 6b855d2c95158344e957e9f1fd35008e, type: 3}
+      propertyPath: m_Range
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 4376240262789403195, guid: 6b855d2c95158344e957e9f1fd35008e, type: 3}
       propertyPath: m_Name
       value: Eyes
+      objectReference: {fileID: 0}
+    - target: {fileID: 6004713298291960837, guid: 6b855d2c95158344e957e9f1fd35008e, type: 3}
+      propertyPath: m_Range
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6924408222835431125, guid: 6b855d2c95158344e957e9f1fd35008e, type: 3}
+      propertyPath: m_Range
+      value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
