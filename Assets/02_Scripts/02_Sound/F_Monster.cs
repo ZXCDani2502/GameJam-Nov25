@@ -41,8 +41,9 @@ public class F_Monster : MonoBehaviour {
         EventInstance heavy = RuntimeManager.CreateInstance(EVENT_PATH2);
         RuntimeManager.AttachInstanceToGameObject(heavy, transform, true);
 
+        heavy.setVolume(5);
 
-        heavy.setParameterByName("MonsterSteps", 0, false); // 0 is walk
+        heavy.setParameterByName("MonsterSteps", 2, false); 
 
         heavy.start();
         heavy.release();

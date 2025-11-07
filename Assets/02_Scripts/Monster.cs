@@ -1,3 +1,6 @@
+using FMOD.Studio;
+using FMODUnity;
+using System.Threading;
 using UnityEngine;
 
 public class Monster : MonoBehaviour {
@@ -39,6 +42,7 @@ public class Monster : MonoBehaviour {
     float lookMonsterTimer;
     [SerializeField] float distanceFromPlayerToChase = 50;
     GameObject flashlight;
+    bool excused;
 
 
 
@@ -85,8 +89,10 @@ public class Monster : MonoBehaviour {
 
             if (lookMonsterTimer > lookMonsterTimerLimit) {
                 EventManager.Trigger("death-state");
-            }
-            else 
+            } else if(!excused && lookMonsterTimer > lookMonsterTimerLimit - 0.5f) {
+                excused = true;
+                ExcuseMe("event:/Character/Excuse Me");
+            } else 
                 lookMonsterTimer += Time.deltaTime;
         }
     }
@@ -119,5 +125,11 @@ public class Monster : MonoBehaviour {
         transform.LookAt(pt);
 
         EventManager.Trigger("sfx-heavy");
+    }
+    void ExcuseMe(string path) {
+        EventInstance excuse = RuntimeManager.CreateInstance(path);
+        RuntimeManager.AttachInstanceToGameObject(excuse, transform, true);
+        excuse.start();
+        excuse.release();
     }
 }
