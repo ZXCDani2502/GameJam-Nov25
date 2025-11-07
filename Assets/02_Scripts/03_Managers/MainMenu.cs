@@ -2,36 +2,55 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
-using System.Collections; // Needed for Coroutines
+using System.Collections;
 
 public class MainMenu : MonoBehaviour
 {
     [Header("UI References")]
-    public TMP_Text titleTextTMP;          // Updated to TMP_Text
-    public GameObject optionsPanel;    
+    public TMP_Text titleTextTMP;
+    public GameObject optionsPanel;
 
     [Header("Story UI")]
-    public GameObject storyPanel;            // Panel for story cutscene
-    public TMP_Text storyText;               // Text component inside the panel
-    [TextArea] public string storyContent;   // Your story text
+    public GameObject storyPanel;
+    public TMP_Text storyText;
+    [TextArea] public string storyContent;
 
     [Header("Options UI Elements")]
-    public Slider volumeSlider;         
-    public Toggle fullscreenToggle;     
-    public TMP_Dropdown resolutionDropdown; 
+    public Slider volumeSlider;
+    public Toggle fullscreenToggle;
+    public TMP_Dropdown resolutionDropdown;
+
+    [Header("Fade In")]
+    public CanvasGroup fadePanel;
+    public float fadeDuration = 1.5f;
 
     private Resolution[] resolutions;
 
+    // Fade panel is set up BEFORE Start() to prevent the transparency jump
+    void Awake()
+    {
+        if (fadePanel != null)
+        {
+            fadePanel.gameObject.SetActive(true);
+            fadePanel.alpha = 1f;              // Ensures it's fully black before rendering
+            fadePanel.blocksRaycasts = false;  // Avoid UI conflicts
+            fadePanel.interactable = false;
+        }
+    }
+
     void Start()
     {
-        // Hide options at start
         if (optionsPanel != null)
             optionsPanel.SetActive(false);
 
-        // Hide story panel at start
         if (storyPanel != null)
             storyPanel.SetActive(false);
 
+        // Start smooth fade
+        if (fadePanel != null)
+            StartCoroutine(FadeIn());
+
+        // --- Options Setup ---
         if (volumeSlider != null)
         {
             volumeSlider.minValue = 0f;
@@ -77,26 +96,23 @@ public class MainMenu : MonoBehaviour
     // --- MAIN MENU BUTTONS ---
     public void PlayGame()
     {
-        // Hide main menu title text
         if (titleTextTMP != null) titleTextTMP.gameObject.SetActive(false);
         if (optionsPanel != null) optionsPanel.SetActive(false);
 
-        // Show story panel
         if (storyPanel != null)
         {
             storyPanel.SetActive(true);
 
             if (storyText != null)
-                storyText.text = storyContent; // Set your story text
+                storyText.text = storyContent;
         }
 
-        // Start coroutine to load game scene after 10 seconds
         StartCoroutine(LoadGameAfterDelay(22.5f));
     }
 
     private IEnumerator LoadGameAfterDelay(float delay)
     {
-        yield return new WaitForSecondsRealtime(delay); // uses real time, ignores Time.timeScale
+        yield return new WaitForSecondsRealtime(delay);
         SceneManager.LoadScene("Game_Scene");
     }
 
@@ -134,5 +150,20 @@ public class MainMenu : MonoBehaviour
         if (resolutions == null || resolutions.Length == 0) return;
         Resolution resolution = resolutions[resolutionIndex];
         Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
+    }
+
+    // --- Smooth Fade In Coroutine ---
+    private IEnumerator FadeIn()
+    {
+        float elapsed = 0f;
+
+        while (elapsed < fadeDuration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            fadePanel.alpha = 1f - (elapsed / fadeDuration);
+            yield return null;
+        }
+
+        fadePanel.alpha = 0f;
     }
 }
