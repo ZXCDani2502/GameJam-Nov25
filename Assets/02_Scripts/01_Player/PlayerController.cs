@@ -81,14 +81,14 @@ public class PlayerController : MonoBehaviour {
     }
 
     void Update() {
-    // Stoppe alles, wenn das Spiel pausiert ist
-    if (Time.timeScale == 0f)
-        return;
+        // Stoppe alles, wenn das Spiel pausiert ist
+        if (Time.timeScale == 0f)
+            return;
 
-    HandleMouseLook();
-    HandleMovement();
-    HandleStamina();
-}
+        HandleMouseLook();
+        HandleMovement();
+        HandleStamina();
+    }
 
     void HandleMovement() {
         #region WalkRun
@@ -253,5 +253,15 @@ public class PlayerController : MonoBehaviour {
             return hit.distance;
         else
             return Mathf.Infinity;
+    }
+
+    // Victory Trigger
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Ending"))
+        {
+            Debug.Log("Victory achieved");
+            // Will be changed
+        }
     }
 }
