@@ -1,7 +1,11 @@
 using UnityEngine;
+using TMPro;
+using System.Collections;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(CharacterController))]
-public class PlayerController : MonoBehaviour {
+public class PlayerController : MonoBehaviour
+{
     [Header("Movement Settings")]
     public float speed = 6f;
     public float sprintMultiplier = 1.6f;
@@ -25,6 +29,18 @@ public class PlayerController : MonoBehaviour {
     public float staminaDrainRate = 1f;
     public float staminaRegenRate = 0.5f;
     public float exhaustionCooldown = 4f;
+
+    [Header("Victory UI")]
+    public GameObject victoryPanel;
+    public TMP_Text victoryTitleText;
+    public TMP_Text victoryInstructionText;
+    public float victoryDelay = 5f;
+
+    [Header("Victory Text Content")]
+    [TextArea] public string victoryTitleContent = "You Won"; // editable in inspector
+    [TextArea] public string victoryInstructionContent = "Press Enter to return to Main Menu"; // editable in inspector
+
+    private bool victoryTriggered = false;
 
     CharacterController controller;
     Transform cam;
@@ -53,7 +69,7 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] float runNoiseLevel = 5;
     [SerializeField] float landNoiseLevel = 10;
 
-    //Breathing
+    // Breathing
     bool f_walk, f_run, f_exhaust;
 
     CameraShake cameraShake;
@@ -62,14 +78,15 @@ public class PlayerController : MonoBehaviour {
     bool allowLook = true;
 
     // External control for PauseManager
-    public void SetLookState(bool canLook) {
+    public void SetLookState(bool canLook)
+    {
         allowLook = canLook;
     }
 
-    void Start() {
+    void Start()
+    {
         controller = GetComponent<CharacterController>();
         cam = Camera.main.transform;
-
         cameraShake = cam.GetComponent<CameraShake>();
 
         Cursor.lockState = CursorLockMode.Locked;
@@ -77,27 +94,31 @@ public class PlayerController : MonoBehaviour {
 
         currentSpeed = speed;
         currentStamina = maxStamina;
-        // (Sound)baseline idle breathing
     }
 
-    void Update() {
-        // Stoppe alles, wenn das Spiel pausiert ist
+    private void Update()
+    {
         if (Time.timeScale == 0f)
             return;
 
         HandleMouseLook();
         HandleMovement();
         HandleStamina();
+
+        // Check for Enter key to return to Main Menu after victory
+        if (victoryTriggered && Input.GetKeyDown(KeyCode.Return))
+        {
+            SceneManager.LoadScene("Main_Menu");
+        }
     }
 
-    void HandleMovement() {
+    void HandleMovement()
+    {
         #region WalkRun
-
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
 
         bool wantsToSprint = Input.GetKey(KeyCode.LeftShift) && z > 0f && x == 0f;
-        bool wasSprinting = isSprinting;
         isSprinting = wantsToSprint && !isExhausted && currentStamina > 0f;
 
         float targetSpeed = isSprinting ? speed * sprintMultiplier : speed;
@@ -106,79 +127,73 @@ public class PlayerController : MonoBehaviour {
         Vector3 move = transform.right * x + transform.forward * z;
         controller.Move(move * currentSpeed * Time.deltaTime);
 
-        if (cameraShake != null) {
-            if (move.magnitude > 0.1f && isGrounded) {
-                if (isSprinting) {
-                    cameraShake.SetContinuousShake(0.05f, 12f);  // stronger, faster shake
-                } else
-                    cameraShake.SetContinuousShake(0.03f, 8f);   // gentle walk sway
-            } else {
-                cameraShake.StopContinuousShake();  // idle -> no sway
+        if (cameraShake != null)
+        {
+            if (move.magnitude > 0.1f && isGrounded)
+            {
+                cameraShake.SetContinuousShake(isSprinting ? 0.05f : 0.03f, isSprinting ? 12f : 8f);
+            }
+            else
+            {
+                cameraShake.StopContinuousShake();
             }
         }
-
         #endregion
+
         #region Footsteps
-        if (isGrounded) {
+        if (isGrounded)
+        {
             if (move != Vector3.zero && !isSprinting) walkFootstepTimer += Time.deltaTime;
             else if (move != Vector3.zero && isSprinting) runFootstepTimer += Time.deltaTime;
 
-            if (walkFootstepTimer > walkFootstepTimerLimit) {
+            if (walkFootstepTimer > walkFootstepTimerLimit)
+            {
                 walkFootstepTimer = 0;
-
                 EventManager.Trigger("sfx-walk-step");
                 EventManager.Trigger("add-noise", walkNoiseLevel);
             }
-            if (runFootstepTimer > runFootstepTimerLimit) {
+            if (runFootstepTimer > runFootstepTimerLimit)
+            {
                 runFootstepTimer = 0;
                 EventManager.Trigger("sfx-run-step");
                 EventManager.Trigger("add-noise", runNoiseLevel);
             }
         }
-
         #endregion
+
         #region Jump
         isGrounded = CheckGrounded();
 
-        // landing
-        if (!isLanded && velocity.y < 0f && GetDistanceToGround() <= groundProximityThreshold) {
+        // Landing
+        if (!isLanded && velocity.y < 0f && GetDistanceToGround() <= groundProximityThreshold)
+        {
             velocity.y = -2f;
             isLanded = true;
-            if (cameraShake != null)
-                cameraShake.Shake(0.05f, 0.01f); // small landing shake
+            cameraShake?.Shake(0.05f, 0.01f);
             EventManager.Trigger("sfx-land");
             EventManager.Trigger("add-noise", landNoiseLevel);
         }
 
-        if (Input.GetButtonDown("Jump") && isGrounded) {
+        if (Input.GetButtonDown("Jump") && isGrounded)
+        {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
             isLanded = false;
-            //if (cameraShake != null)
-            //    cameraShake.Shake(0.1f, 0.08f); // subtle jump shake
             EventManager.Trigger("sfx-jump");
         }
 
-        if (velocity.y < 0f)
-            velocity.y += gravity * fallMultiplier * Time.deltaTime;
-        else
-            velocity.y += gravity * Time.deltaTime;
-
+        velocity.y += (velocity.y < 0f ? gravity * fallMultiplier : gravity) * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
         #endregion
 
-        if (Input.GetKeyDown(KeyCode.K)) {
-            if (cameraShake != null) {
-                cameraShake.Shake(0.6f, 0.5f);  // noticeable duration & magnitude
-                Debug.Log("CameraShake triggered!");
-            } else Debug.LogWarning("cameraShake reference is null");
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            cameraShake?.Shake(0.6f, 0.5f);
         }
     }
 
-    void HandleMouseLook() {
-        if (!Application.isFocused) return;
-
-        // Stop camera when game is paused
-        if (!allowLook) return;
+    void HandleMouseLook()
+    {
+        if (!Application.isFocused || !allowLook) return;
 
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * sensitivityMultiplier;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * sensitivityMultiplier;
@@ -190,78 +205,103 @@ public class PlayerController : MonoBehaviour {
         transform.Rotate(Vector3.up * mouseX);
     }
 
-    void HandleStamina() {
-        bool wasExhausted = isExhausted;
-
-        if (isSprinting) {
-            if (!f_run) {
-                EventManager.Trigger("sfx-run-breath", 1 - currentStamina/maxStamina);
-                f_run = true;
-                f_exhaust = f_walk = false;
+    void HandleStamina()
+    {
+        if (isSprinting)
+        {
+            if (!f_run)
+            {
+                EventManager.Trigger("sfx-run-breath", 1 - currentStamina / maxStamina);
+                f_run = true; f_exhaust = f_walk = false;
             }
             currentStamina -= staminaDrainRate * Time.deltaTime;
-
-            if (currentStamina <= 0f) {
+            if (currentStamina <= 0f)
+            {
                 currentStamina = 0f;
                 isExhausted = true;
                 exhaustionTimer = exhaustionCooldown;
-            } else {
-                // (Sound)gradually crossfade normal breathing to heavier breathing when sprinting
             }
-        } else {
-            if (isExhausted) {
-                if (!f_exhaust) {
+        }
+        else
+        {
+            if (isExhausted)
+            {
+                if (!f_exhaust)
+                {
                     EventManager.Trigger("sfx-exhausted-breath");
-                    f_exhaust = true;
-                    f_run = f_walk = false;
+                    f_exhaust = true; f_run = f_walk = false;
                 }
                 exhaustionTimer -= Time.deltaTime;
-                if (exhaustionTimer <= 0f) {
-                    isExhausted = false;
-                    // (Sound)some recovery sign
-                }
-            } else {
-                if (!f_walk) {
+                if (exhaustionTimer <= 0f) isExhausted = false;
+            }
+            else
+            {
+                if (!f_walk)
+                {
                     EventManager.Trigger("sfx-walk-breath");
-                    f_walk = true;
-                    f_run = f_exhaust = false;
+                    f_walk = true; f_run = f_exhaust = false;
                 }
                 currentStamina = Mathf.Min(maxStamina, currentStamina + staminaRegenRate * Time.deltaTime);
             }
         }
     }
 
-    bool CheckGrounded() {
+    bool CheckGrounded()
+    {
         float footHeight = controller.height / 2f - controller.radius;
         Vector3 footPos = transform.position + Vector3.down * footHeight;
 
-        if (Physics.Raycast(footPos + Vector3.up * groundCheckOffset, Vector3.down, out RaycastHit hit, groundCheckOffset + 0.1f, groundMask))
-            return true;
-
-        if (Physics.CheckSphere(footPos + Vector3.up * groundCheckOffset, groundCheckRadius, groundMask))
-            return true;
-
-        return false;
+        return Physics.Raycast(footPos + Vector3.up * groundCheckOffset, Vector3.down, out _, groundCheckOffset + 0.1f, groundMask)
+               || Physics.CheckSphere(footPos + Vector3.up * groundCheckOffset, groundCheckRadius, groundMask);
     }
 
-    float GetDistanceToGround() {
-        RaycastHit hit;
+    float GetDistanceToGround()
+    {
         float footHeight = controller.height / 2f - controller.radius;
         Vector3 footPos = transform.position + Vector3.down * footHeight;
 
-        if (Physics.Raycast(footPos, Vector3.down, out hit, 5f, groundMask))
-            return hit.distance;
-        else
-            return Mathf.Infinity;
+        return Physics.Raycast(footPos, Vector3.down, out RaycastHit hit, 5f, groundMask) ? hit.distance : Mathf.Infinity;
     }
 
-    // Victory Trigger
+    // Victory UI Integration
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Ending"))
+        if (other.CompareTag("Ending") && !victoryTriggered)
         {
-            Debug.Log("Victory achieved");
-            // Will be changed
+            TriggerVictory();
+        }
+    }
+
+    private IEnumerator ShowVictoryPanel()
+    {
+        yield return new WaitForSeconds(victoryDelay);
+
+        if (victoryPanel != null) victoryPanel.SetActive(true);
+        if (victoryTitleText != null) victoryTitleText.text = victoryTitleContent;
+        if (victoryInstructionText != null) victoryInstructionText.text = victoryInstructionContent;
+
+        SetLookState(false);
+    }
+
+    // Public methods for external control
+    public void SetVictoryTitle(string title)
+    {
+        victoryTitleContent = title;
+        if (victoryTitleText != null) victoryTitleText.text = title;
+    }
+
+    public void SetVictoryInstruction(string instruction)
+    {
+        victoryInstructionContent = instruction;
+        if (victoryInstructionText != null) victoryInstructionText.text = instruction;
+    }
+
+    public void TriggerVictory()
+    {
+        if (!victoryTriggered)
+        {
+            victoryTriggered = true;
+            StartCoroutine(ShowVictoryPanel());
         }
     }
 }
