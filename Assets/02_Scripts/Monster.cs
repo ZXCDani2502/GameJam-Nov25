@@ -38,17 +38,22 @@ public class Monster : MonoBehaviour {
     [SerializeField] float lookMonsterTimerLimit = 1.5f;
     float lookMonsterTimer;
     [SerializeField] float distanceFromPlayerToChase = 50;
+    GameObject flashlight;
+
+
 
     void OnEnable() => EventManager.SubscribeFloat("add-noise", AddAgression);
     void OnDisable() => EventManager.UnsubscribeFloat("add-noise", AddAgression);
-    void Start() => player = GameObject.Find("Player");
+    void Start() {
+        player = GameObject.Find("Player");
+        flashlight = GameObject.Find("Flashlight");
+    }
 
     void Update() {
         if (!threshold1Hit && aggression > threshold1) threshold1Hit = true;
         if (!threshold2Hit && aggression > threshold2) threshold2Hit = true;
         if (!threshold3Hit && aggression > threshold3) {
             threshold3Hit = true;
-            GameObject.Find("Flashlight").SetActive(false);
             TPOutOfView();
             randomDirection = Random.Range(0, 2);
         }
@@ -76,6 +81,8 @@ public class Monster : MonoBehaviour {
         transform.LookAt(ct);
         Debug.DrawRay(ct.position, ct.forward * 30, Color.green);
         if (Physics.Raycast(ct.position, ct.forward, out _, rayDistance, LayerMask.GetMask("Monster"))) {
+            if (flashlight.activeInHierarchy) flashlight.SetActive(false);
+
             if (lookMonsterTimer > lookMonsterTimerLimit) {
                 EventManager.Trigger("death-state");
             }
