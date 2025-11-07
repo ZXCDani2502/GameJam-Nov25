@@ -111,7 +111,7 @@ public class MainMenu : MonoBehaviour
         }
 
         // Start the timed auto-load
-        autoLoadRoutine = StartCoroutine(LoadGameAfterDelay(22.5f));
+        autoLoadRoutine = StartCoroutine(LoadGameAfterDelay(45f));
     }
 
     private IEnumerator LoadGameAfterDelay(float delay)
