@@ -24,33 +24,29 @@ public class MainMenu : MonoBehaviour
     public CanvasGroup fadePanel;
     public float fadeDuration = 1.5f;
 
-    private Resolution[] resolutions;
+    [Header("Play / Story Controls")]
+    public Button skipButton;
 
-    // Fade panel is set up BEFORE Start() to prevent the transparency jump
-    void Awake()
-    {
-        if (fadePanel != null)
-        {
-            fadePanel.gameObject.SetActive(true);
-            fadePanel.alpha = 1f;              // Ensures it's fully black before rendering
-            fadePanel.blocksRaycasts = false;  // Avoid UI conflicts
-            fadePanel.interactable = false;
-        }
-    }
+    private Resolution[] resolutions;
+    private Coroutine autoLoadRoutine;          // Reference to stop coroutine
 
     void Start()
     {
-        if (optionsPanel != null)
-            optionsPanel.SetActive(false);
+        if (optionsPanel != null) optionsPanel.SetActive(false);
+        if (storyPanel != null) storyPanel.SetActive(false);
 
-        if (storyPanel != null)
-            storyPanel.SetActive(false);
+        // Hide skip button at start
+        if (skipButton != null)
+            skipButton.gameObject.SetActive(false);
 
-        // Start smooth fade
+        // Fade in
         if (fadePanel != null)
+        {
+            fadePanel.alpha = 1f;
             StartCoroutine(FadeIn());
+        }
 
-        // --- Options Setup ---
+        // Options setup (probably not working at all but who knows?)
         if (volumeSlider != null)
         {
             volumeSlider.minValue = 0f;
@@ -93,7 +89,7 @@ public class MainMenu : MonoBehaviour
         }
     }
 
-    // --- MAIN MENU BUTTONS ---
+    // MainMenu buttons
     public void PlayGame()
     {
         if (titleTextTMP != null) titleTextTMP.gameObject.SetActive(false);
@@ -102,12 +98,20 @@ public class MainMenu : MonoBehaviour
         if (storyPanel != null)
         {
             storyPanel.SetActive(true);
-
             if (storyText != null)
                 storyText.text = storyContent;
         }
 
-        StartCoroutine(LoadGameAfterDelay(22.5f));
+        // Show skip button
+        if (skipButton != null)
+        {
+            skipButton.gameObject.SetActive(true);
+            skipButton.onClick.RemoveAllListeners();
+            skipButton.onClick.AddListener(SkipToGame);
+        }
+
+        // Start the timed auto-load
+        autoLoadRoutine = StartCoroutine(LoadGameAfterDelay(22.5f));
     }
 
     private IEnumerator LoadGameAfterDelay(float delay)
@@ -116,54 +120,46 @@ public class MainMenu : MonoBehaviour
         SceneManager.LoadScene("Game_Scene");
     }
 
-    public void OpenOptions()
+    // Called by Skip button
+    public void SkipToGame()
     {
-        if (optionsPanel != null) optionsPanel.SetActive(true);
-        if (titleTextTMP != null) titleTextTMP.gameObject.SetActive(false);
+        // Stop auto timer if still running
+        if (autoLoadRoutine != null)
+            StopCoroutine(autoLoadRoutine);
+
+        SceneManager.LoadScene("Game_Scene");
     }
 
-    public void CloseOptions()
+    // Fade in coroutine
+    private IEnumerator FadeIn()
     {
-        if (optionsPanel != null) optionsPanel.SetActive(false);
-        if (titleTextTMP != null) titleTextTMP.gameObject.SetActive(true);
+        float t = 0f;
+
+        while (t < fadeDuration)
+        {
+            t += Time.unscaledDeltaTime;
+            fadePanel.alpha = Mathf.Lerp(1f, 0f, t / fadeDuration);
+            yield return null;
+        }
+
+        fadePanel.alpha = 0f;
+    }
+
+    // Options functions
+    public void SetVolume(float volume) => AudioListener.volume = volume;
+
+    public void SetFullscreen(bool isFullscreen) => Screen.fullScreen = isFullscreen;
+
+    public void SetResolution(int index)
+    {
+        if (resolutions == null || resolutions.Length == 0) return;
+        Resolution r = resolutions[index];
+        Screen.SetResolution(r.width, r.height, Screen.fullScreen);
     }
 
     public void QuitGame()
     {
         Debug.Log("Quit clicked");
         Application.Quit();
-    }
-
-    // --- OPTIONS FUNCTIONS ---
-    public void SetVolume(float volume)
-    {
-        AudioListener.volume = volume;
-    }
-
-    public void SetFullscreen(bool isFullscreen)
-    {
-        Screen.fullScreen = isFullscreen;
-    }
-
-    public void SetResolution(int resolutionIndex)
-    {
-        if (resolutions == null || resolutions.Length == 0) return;
-        Resolution resolution = resolutions[resolutionIndex];
-        Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
-    }
-
-    // --- Smooth Fade In Coroutine ---
-    private IEnumerator FadeIn()
-    {
-        float elapsed = 0f;
-
-        while (elapsed < fadeDuration)
-        {
-            elapsed += Time.unscaledDeltaTime;
-            fadePanel.alpha = 1f - (elapsed / fadeDuration);
-            yield return null;
-        }
-
-        fadePanel.alpha = 0f;
     }
 }
