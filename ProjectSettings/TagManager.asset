@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Gravel
   - Grass
+  - Ending
   layers:
   - Default
   - TransparentFX
