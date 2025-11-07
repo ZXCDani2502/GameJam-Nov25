@@ -1,3 +1,4 @@
+using FMODUnity;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -20,6 +21,17 @@ public class DeathState : MonoBehaviour {
         var ct = camera.transform;
         monster.transform.position = ct.position + ct.forward;
         monster.transform.LookAt(player.transform);
+
+
         SceneManager.LoadScene("Main_Menu");
     }
+
+
+    //var ct = camera.transform;
+    //var mt = monster.transform;
+    //monster.transform.LookAt(player.transform);
+    //    for (int i = 0; i< 10; i++) {
+    //        mt.position = Vector3.Lerp(mt.position, ct.position + ct.forward, i / 10);
+    //        new WaitForSeconds(0.02f);
+
 }

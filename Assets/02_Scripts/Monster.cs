@@ -37,7 +37,7 @@ public class Monster : MonoBehaviour {
     int randomDirection;
     [SerializeField] float lookMonsterTimerLimit = 1.5f;
     float lookMonsterTimer;
-    float distanceFromPlayerToChase = 50;
+    [SerializeField] float distanceFromPlayerToChase = 50;
 
     void OnEnable() => EventManager.SubscribeFloat("add-noise", AddAgression);
     void OnDisable() => EventManager.UnsubscribeFloat("add-noise", AddAgression);
