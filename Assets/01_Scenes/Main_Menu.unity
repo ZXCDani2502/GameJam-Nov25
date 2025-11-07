@@ -295,7 +295,7 @@ MonoBehaviour:
   fullscreenToggle: {fileID: 365785182}
   resolutionDropdown: {fileID: 0}
   fadePanel: {fileID: 736014534}
-  fadeDuration: 4
+  fadeDuration: 5
   skipButton: {fileID: 313904723}
 --- !u!4 &78524879
 Transform:
