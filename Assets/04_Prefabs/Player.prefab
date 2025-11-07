@@ -94,9 +94,9 @@ MonoBehaviour:
   exhaustionCooldown: 4
   walkFootstepTimerLimit: 0.6
   runFootstepTimerLimit: 0.3
-  walkNoiseLevel: 3
-  runNoiseLevel: 5
-  landNoiseLevel: 10
+  walkNoiseLevel: 1
+  runNoiseLevel: 2
+  landNoiseLevel: 3
 --- !u!114 &3157274722422144189
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -214,7 +214,7 @@ Light:
   m_Color: {r: 1, g: 0.9394475, b: 0.33018857, a: 1}
   m_Intensity: 20
   m_Range: 100
-  m_SpotAngle: 40
+  m_SpotAngle: 50
   m_InnerSpotAngle: 40
   m_CookieSize: 10
   m_Shadows:
@@ -301,8 +301,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ae167c1bd31b994dbca53c2620a5a18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  switchNoiseAmount: 6
-  buzzNoiseAmount: 0.5
+  switchNoiseAmount: 2
+  buzzNoiseAmount: 0.3
 --- !u!114 &5127722760469663841
 MonoBehaviour:
   m_ObjectHideFlags: 0
