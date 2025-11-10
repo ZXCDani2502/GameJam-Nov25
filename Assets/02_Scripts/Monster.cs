@@ -1,6 +1,3 @@
-using FMOD.Studio;
-using FMODUnity;
-using System.Threading;
 using UnityEngine;
 
 public class Monster : MonoBehaviour {
@@ -72,8 +69,8 @@ public class Monster : MonoBehaviour {
 
     void FixedUpdate() {
         if (threshold1Hit) StartFollowing();
-        if (threshold3Hit) { 
-        CheckLookingAtMonster();
+        if (threshold3Hit) {
+            CheckLookingAtMonster();
             if (Vector3.Distance(transform.position, player.transform.position) > distanceFromPlayerToChase) {
                 TPOutOfView();
             }
@@ -89,10 +86,10 @@ public class Monster : MonoBehaviour {
 
             if (lookMonsterTimer > lookMonsterTimerLimit) {
                 EventManager.Trigger("death-state");
-            } else if(!excused && lookMonsterTimer > lookMonsterTimerLimit - 0.5f) {
+            } else if (!excused && lookMonsterTimer > lookMonsterTimerLimit - 0.5f) {
                 excused = true;
-                ExcuseMe("event:/Character/Excuse Me");
-            } else 
+                EventManager.Trigger("sfx-excuse");
+            } else
                 lookMonsterTimer += Time.deltaTime;
         }
     }
@@ -126,10 +123,5 @@ public class Monster : MonoBehaviour {
 
         EventManager.Trigger("sfx-heavy");
     }
-    void ExcuseMe(string path) {
-        EventInstance excuse = RuntimeManager.CreateInstance(path);
-        RuntimeManager.AttachInstanceToGameObject(excuse, transform, true);
-        excuse.start();
-        excuse.release();
-    }
+
 }

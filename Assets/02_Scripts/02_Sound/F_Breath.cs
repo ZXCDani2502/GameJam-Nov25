@@ -1,10 +1,12 @@
-using System;
 using FMOD.Studio;
 using FMODUnity;
 using UnityEngine;
 
 public class F_Breath : MonoBehaviour {
     const string EVENT_PATH = "event:/Character/BreathWalkRun";
+
+    EventInstance exhaust;
+    EventInstance run;
 
     void OnEnable() {
         EventManager.Subscribe("sfx-walk-breath", PlayWalkEvent);
@@ -23,15 +25,22 @@ public class F_Breath : MonoBehaviour {
         EventInstance walk = RuntimeManager.CreateInstance(EVENT_PATH);
         RuntimeManager.AttachInstanceToGameObject(walk, transform, true);
 
-        walk.setParameterByName("Breathing", 0); // 0 is walk
+        run.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT); //allows walk breath to play after running
 
-        walk.start();
-        walk.release();
+        PLAYBACK_STATE state;
+        exhaust.getPlaybackState(out state);
+        if (state != PLAYBACK_STATE.PLAYING) { //start breathing normally only after you get your breath back
+            walk.setParameterByName("Breathing", 0); // 0 is walk
+            walk.start();
+            walk.release();
+        }
     }
-    
+
     void PlayRunEvent(float stamina) {
-        EventInstance run = RuntimeManager.CreateInstance(EVENT_PATH);
+        run = RuntimeManager.CreateInstance(EVENT_PATH);
         RuntimeManager.AttachInstanceToGameObject(run, transform, true);
+
+        exhaust.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
 
         run.setParameterByName("RunningBreath", stamina);
         run.setParameterByName("Breathing", 1); //1 is run
@@ -40,11 +49,11 @@ public class F_Breath : MonoBehaviour {
         run.release();
     }
 
-    private void PlayExhaustedEvent() {
-        EventInstance exhaust = RuntimeManager.CreateInstance(EVENT_PATH);
+    void PlayExhaustedEvent() {
+        exhaust = RuntimeManager.CreateInstance(EVENT_PATH);
         RuntimeManager.AttachInstanceToGameObject(exhaust, transform, true);
 
-        exhaust.setParameterByName("Breathing", 2); //1 is exhausted
+        exhaust.setParameterByName("Breathing", 2); //2 is exhausted
 
         exhaust.start();
         exhaust.release();

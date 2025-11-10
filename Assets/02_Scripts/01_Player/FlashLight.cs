@@ -23,7 +23,7 @@ public class Flashlight : MonoBehaviour {
             EventManager.Trigger("add-noise", switchNoiseAmount);
         }
         if (light.enabled) {
-            EventManager.Trigger("add-noise", buzzNoiseAmount * Time.deltaTime);
+            EventManager.Trigger("add-noise", buzzNoiseAmount * Time.deltaTime, false);
         }
     }
 }

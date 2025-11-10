@@ -1,26 +1,29 @@
-using System;
 using FMOD.Studio;
 using FMODUnity;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 public class F_Monster : MonoBehaviour {
     int materialValue;
     RaycastHit rayHit;
     float rayDistance = 0.3f;
-    const string EVENT_PATH1 = "event:/Character/DarkSteps";
-    const string EVENT_PATH2 = "event:/Character/MonsterSteps";
+    const string EVENT_PATH1 = "event:/Monster/DarkSteps";
+    const string EVENT_PATH2 = "event:/Monster/MonsterSteps";
+    const string EVENT_PATH3 = "event:/Monster/Excuse Me";
 
-    public float volume = 4;
+
+    public float followVolume = 4;
+    public float heavyVolume = 7;
 
     void OnEnable() {
         EventManager.Subscribe("sfx-follow", PlayFollowEvent);
         EventManager.Subscribe("sfx-heavy", PlayHeavyEvent);
+        EventManager.Subscribe("sfx-excuse", ExcuseMe);
     }
 
     void OnDisable() {
         EventManager.Unsubscribe("sfx-follow", PlayFollowEvent);
         EventManager.Unsubscribe("sfx-heavy", PlayHeavyEvent);
+        EventManager.Unsubscribe("sfx-excuse", ExcuseMe);
     }
 
 
@@ -29,7 +32,7 @@ public class F_Monster : MonoBehaviour {
         EventInstance follow = RuntimeManager.CreateInstance(EVENT_PATH1);
         RuntimeManager.AttachInstanceToGameObject(follow, transform, true);
 
-        follow.setVolume(volume);
+        follow.setVolume(followVolume);
 
         follow.setParameterByName("Terrain", materialValue);
         follow.setParameterByName("WalkRun", 1, false);
@@ -41,14 +44,21 @@ public class F_Monster : MonoBehaviour {
         EventInstance heavy = RuntimeManager.CreateInstance(EVENT_PATH2);
         RuntimeManager.AttachInstanceToGameObject(heavy, transform, true);
 
-        heavy.setVolume(5);
+        heavy.setVolume(heavyVolume);
 
-        heavy.setParameterByName("MonsterSteps", 2, false); 
+        heavy.setParameterByName("MonsterSteps", 2, false);
 
         heavy.start();
         heavy.release();
     }
 
+    void ExcuseMe() {
+        EventInstance excuse = RuntimeManager.CreateInstance(EVENT_PATH3);
+        RuntimeManager.AttachInstanceToGameObject(excuse, transform, true);
+
+        excuse.start();
+        excuse.release();
+    }
 
     void MaterialCheck() {
         if (Physics.Raycast(transform.position, Vector3.down, out rayHit, rayDistance, LayerMask.GetMask("Ground"))) {

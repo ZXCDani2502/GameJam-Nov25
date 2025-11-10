@@ -20,10 +20,11 @@ public class EventManager : MonoBehaviour { //TODO: make generic
             dictionary[_eventName] -= _action;
     }
 
-    public static void Trigger(string _eventName) {
+    public static void Trigger(string _eventName, bool logDebug = true) {
         if (dictionary.ContainsKey(_eventName)) {
             dictionary[_eventName]?.Invoke();
-            Debug.Log("Event Triggered: " + _eventName);
+            
+            if (logDebug) Debug.Log("Event Triggered: " + _eventName);
         }
     }
     #endregion
@@ -39,10 +40,10 @@ public class EventManager : MonoBehaviour { //TODO: make generic
         if (integerDictionary.ContainsKey(_eventName))
             integerDictionary[_eventName] -= _action;
     }
-    public static void Trigger(string _eventName, int value) {
+    public static void Trigger(string _eventName, int value, bool logDebug = true) {
         if (integerDictionary.ContainsKey(_eventName)) {
             integerDictionary[_eventName]?.Invoke(value);
-            Debug.Log("Event Triggered: " + _eventName + " With value: " + value);
+            if (logDebug) Debug.Log("Event Triggered: " + _eventName + " With value: " + value);
         }
     }
     #endregion
@@ -58,10 +59,10 @@ public class EventManager : MonoBehaviour { //TODO: make generic
         if (floatDictionary.ContainsKey(_eventName))
             floatDictionary[_eventName] -= _action;
     }
-    public static void Trigger(string _eventName, float value) {
+    public static void Trigger(string _eventName, float value, bool logDebug = true) {
         if (floatDictionary.ContainsKey(_eventName)) {
             floatDictionary[_eventName]?.Invoke(value);
-            Debug.Log("Event Triggered: " + _eventName + " With value: " + value);
+            if (logDebug) Debug.Log("Event Triggered: " + _eventName + " With value: " + value);
         }
     }
     #endregion
