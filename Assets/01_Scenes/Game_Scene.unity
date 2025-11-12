@@ -15718,6 +15718,10 @@ PrefabInstance:
       value: PauseMenu
       objectReference: {fileID: 0}
     - target: {fileID: 1979267432396625377, guid: 3ade149a89949ad4d8f3df5581ab7651, type: 3}
+      propertyPath: m_text
+      value: Resume Game
+      objectReference: {fileID: 0}
+    - target: {fileID: 1979267432396625377, guid: 3ade149a89949ad4d8f3df5581ab7651, type: 3}
       propertyPath: m_fontSize
       value: 30
       objectReference: {fileID: 0}
@@ -15927,7 +15931,7 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: 4b775fd2e279fd04a962470b83154b52, type: 2}
     - target: {fileID: 8309719567544381584, guid: 3ade149a89949ad4d8f3df5581ab7651, type: 3}
       propertyPath: m_fontStyle
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8309719567544381584, guid: 3ade149a89949ad4d8f3df5581ab7651, type: 3}
       propertyPath: m_fontColor.b
@@ -15971,7 +15975,7 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: 4b775fd2e279fd04a962470b83154b52, type: 2}
     - target: {fileID: 8563371908470814850, guid: 3ade149a89949ad4d8f3df5581ab7651, type: 3}
       propertyPath: m_fontStyle
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8563371908470814850, guid: 3ade149a89949ad4d8f3df5581ab7651, type: 3}
       propertyPath: m_fontColor.b
