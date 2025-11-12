@@ -202,13 +202,15 @@ public class PlayerController : MonoBehaviour {
             }
         } else {
             if (isExhausted) {
-                if (!f_exhaust) {
-                    EventManager.Trigger("sfx-exhausted-breath");
-                    f_exhaust = true; f_run = false;
-                }
+                //if (!f_exhaust) {
+                EventManager.Trigger("sfx-exhausted-breath");
+                f_exhaust = true; f_run = false;
+                //}
                 exhaustionTimer -= Time.deltaTime;
                 if (exhaustionTimer <= 0f) isExhausted = false;
             } else {
+                f_exhaust = f_run = false; 
+                EventManager.Trigger("sfx-walk-breath");
                 currentStamina = Mathf.Min(maxStamina, currentStamina + staminaRegenRate * Time.deltaTime);
             }
         }

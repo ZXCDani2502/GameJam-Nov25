@@ -1,6 +1,5 @@
 using FMOD.Studio;
 using FMODUnity;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class F_Breath : MonoBehaviour {
@@ -9,9 +8,9 @@ public class F_Breath : MonoBehaviour {
     EventInstance breath;
 
     float exhaustTimerLimit = 7f;
-    float exhaustTimer;
+    float exhaustTimer = 7.8f;
 
-    public float walkVolume;
+    public float walkVolume = 1f;
 
     void OnEnable() {
         EventManager.Subscribe("sfx-walk-breath", PlayWalkEvent);
@@ -29,6 +28,7 @@ public class F_Breath : MonoBehaviour {
     void Start() {
         breath = RuntimeManager.CreateInstance(EVENT_PATH);
         RuntimeManager.AttachInstanceToGameObject(breath, transform, true);
+        PlayWalkEvent();
     }
 
     void Update() {
@@ -60,6 +60,7 @@ public class F_Breath : MonoBehaviour {
     }
 
     void PlayExhaustedEvent() {
+        if (exhaustTimer < exhaustTimerLimit) return;
         exhaustTimer = 0;
 
         breath.setParameterByName("Breathing", 2); //2 is exhausted
