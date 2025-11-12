@@ -90,14 +90,14 @@ MonoBehaviour:
   active: 1
   Properties:
     LiveUpdate:
-      Value: 0
-      HasValue: 0
+      Value: 1
+      HasValue: 1
     LiveUpdatePort:
       Value: 9264
       HasValue: 1
     Overlay:
-      Value: 0
-      HasValue: 0
+      Value: 1
+      HasValue: 1
     OverlayPosition:
       Value: 0
       HasValue: 0
@@ -114,8 +114,8 @@ MonoBehaviour:
       Value: 
       HasValue: 0
     SpeakerMode:
-      Value: 0
-      HasValue: 0
+      Value: 3
+      HasValue: 1
     VirtualChannelCount:
       Value: 0
       HasValue: 0
@@ -610,7 +610,7 @@ MonoBehaviour:
   HasSourceProject: 0
   HasPlatforms: 0
   sourceProjectPath: ../../../FMOD Projects/Shhh Game Jam 25/Shhh Game Jam 25.fspro
-  sourceBankPath: Assets/FMODBanks
+  sourceBankPath: Assets/FMODBanks/Desktop
   sourceBankPathUnformatted: 
   BankRefreshCooldown: 5
   ShowBankRefreshWindow: 1
@@ -622,7 +622,7 @@ MonoBehaviour:
   TargetAssetPath: FMODBanks
   TargetBankFolder: 
   EventLinkage: 0
-  LoggingLevel: 2
+  LoggingLevel: 4
   SpeakerModeSettings: []
   SampleRateSettings: []
   LiveUpdateSettings: []
@@ -633,11 +633,17 @@ MonoBehaviour:
   Plugins: []
   MasterBanks:
   - Desktop/Master
+  - Desktop/Master
   Banks:
   - Desktop/Foley
+  - Desktop/Foley
+  - Desktop/Monster
   - Desktop/Monster
   - Desktop/Music
+  - Desktop/Music
   - Desktop/Player
+  - Desktop/Player
+  - Desktop/UI
   - Desktop/UI
   BanksToLoad: []
   LiveUpdatePort: 9264
@@ -645,9 +651,9 @@ MonoBehaviour:
   AndroidUseOBB: 0
   AndroidPatchBuild: 0
   MeterChannelOrdering: 0
-  StopEventsOutsideMaxDistance: 0
+  StopEventsOutsideMaxDistance: 1
   BoltUnitOptionsBuildPending: 0
-  EnableErrorCallback: 0
+  EnableErrorCallback: 1
   SharedLibraryUpdateStage: 0
   SharedLibraryTimeSinceStart: 0
   CurrentVersion: 131633
