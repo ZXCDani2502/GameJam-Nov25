@@ -5,8 +5,7 @@ using UnityEngine;
 public class F_Breath : MonoBehaviour {
     const string EVENT_PATH = "event:/Character/BreathWalkRun";
 
-    EventInstance exhaust;
-    EventInstance run;
+    EventInstance exhaust, run, walk;
 
     void OnEnable() {
         EventManager.Subscribe("sfx-walk-breath", PlayWalkEvent);
@@ -18,11 +17,14 @@ public class F_Breath : MonoBehaviour {
         EventManager.Unsubscribe("sfx-walk-breath", PlayWalkEvent);
         EventManager.UnsubscribeFloat("sfx-run-breath", PlayRunEvent);
         EventManager.Unsubscribe("sfx-exhausted-breath", PlayExhaustedEvent);
+        exhaust.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        run.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        walk.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
     }
 
 
     void PlayWalkEvent() {
-        EventInstance walk = RuntimeManager.CreateInstance(EVENT_PATH);
+        walk = RuntimeManager.CreateInstance(EVENT_PATH);
         RuntimeManager.AttachInstanceToGameObject(walk, transform, true);
 
         run.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT); //allows walk breath to play after running
