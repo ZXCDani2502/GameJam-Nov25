@@ -10,18 +10,18 @@ public class F_BGM : MonoBehaviour {
     //bool bgmStarted = false;
     //float bgmTimer;
 
-    [Header("Background Music")]
-    [SerializeField] float bgmTimerLimit = 60f;
+    //[Header("Background Music")]
+    //[SerializeField] float bgmTimerLimit = 60f;
     StudioEventEmitter bgm;
 
 
-    void Awake() { //this makes sure that the background sounds continues playing between scenes
-        if (instance == null) {
-            DontDestroyOnLoad(gameObject);
-            instance = this;
-        } else {
-            Destroy(gameObject);
-        }
+    void Awake() { 
+        //if (instance == null) {//this makes sure that the background sounds continues playing between scenes
+        //    DontDestroyOnLoad(gameObject);
+        //    instance = this;
+        //} else {
+        //    Destroy(gameObject);
+        //}
         bgm = GetComponent<StudioEventEmitter>();
     }
     void Start() => monster = GameObject.Find("Monster").GetComponent<Monster>();

@@ -4,8 +4,7 @@ using System.Collections;
 using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(CharacterController))]
-public class PlayerController : MonoBehaviour
-{
+public class PlayerController : MonoBehaviour {
     [Header("Movement Settings")]
     public float speed = 6f;
     public float sprintMultiplier = 1.6f;
@@ -70,7 +69,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float landNoiseLevel = 10;
 
     // Breathing
-    bool f_walk, f_run, f_exhaust;
+    bool f_run, f_exhaust;
 
     CameraShake cameraShake;
 
@@ -78,13 +77,11 @@ public class PlayerController : MonoBehaviour
     bool allowLook = true;
 
     // External control for PauseManager
-    public void SetLookState(bool canLook)
-    {
+    public void SetLookState(bool canLook) {
         allowLook = canLook;
     }
 
-    void Start()
-    {
+    void Start() {
         controller = GetComponent<CharacterController>();
         cam = Camera.main.transform;
         cameraShake = cam.GetComponent<CameraShake>();
@@ -96,8 +93,7 @@ public class PlayerController : MonoBehaviour
         currentStamina = maxStamina;
     }
 
-    private void Update()
-    {
+    private void Update() {
         if (Time.timeScale == 0f)
             return;
 
@@ -106,14 +102,12 @@ public class PlayerController : MonoBehaviour
         HandleStamina();
 
         // Check for Enter key to return to Main Menu after victory
-        if (victoryTriggered && Input.GetKeyDown(KeyCode.Return))
-        {
+        if (victoryTriggered && Input.GetKeyDown(KeyCode.Return)) {
             SceneManager.LoadScene("Main_Menu");
         }
     }
 
-    void HandleMovement()
-    {
+    void HandleMovement() {
         #region WalkRun
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
@@ -127,33 +121,26 @@ public class PlayerController : MonoBehaviour
         Vector3 move = transform.right * x + transform.forward * z;
         controller.Move(move * currentSpeed * Time.deltaTime);
 
-        if (cameraShake != null)
-        {
-            if (move.magnitude > 0.1f && isGrounded)
-            {
+        if (cameraShake != null) {
+            if (move.magnitude > 0.1f && isGrounded) {
                 cameraShake.SetContinuousShake(isSprinting ? 0.05f : 0.03f, isSprinting ? 12f : 8f);
-            }
-            else
-            {
+            } else {
                 cameraShake.StopContinuousShake();
             }
         }
         #endregion
 
         #region Footsteps
-        if (isGrounded)
-        {
+        if (isGrounded) {
             if (move != Vector3.zero && !isSprinting) walkFootstepTimer += Time.deltaTime;
             else if (move != Vector3.zero && isSprinting) runFootstepTimer += Time.deltaTime;
 
-            if (walkFootstepTimer > walkFootstepTimerLimit)
-            {
+            if (walkFootstepTimer > walkFootstepTimerLimit) {
                 walkFootstepTimer = 0;
                 EventManager.Trigger("sfx-walk-step");
                 EventManager.Trigger("add-noise", walkNoiseLevel);
             }
-            if (runFootstepTimer > runFootstepTimerLimit)
-            {
+            if (runFootstepTimer > runFootstepTimerLimit) {
                 runFootstepTimer = 0;
                 EventManager.Trigger("sfx-run-step");
                 EventManager.Trigger("add-noise", runNoiseLevel);
@@ -165,8 +152,7 @@ public class PlayerController : MonoBehaviour
         isGrounded = CheckGrounded();
 
         // Landing
-        if (!isLanded && velocity.y < 0f && GetDistanceToGround() <= groundProximityThreshold)
-        {
+        if (!isLanded && velocity.y < 0f && GetDistanceToGround() <= groundProximityThreshold) {
             velocity.y = -2f;
             isLanded = true;
             cameraShake?.Shake(0.05f, 0.01f);
@@ -174,8 +160,7 @@ public class PlayerController : MonoBehaviour
             EventManager.Trigger("add-noise", landNoiseLevel);
         }
 
-        if (Input.GetButtonDown("Jump") && isGrounded)
-        {
+        if (Input.GetButtonDown("Jump") && isGrounded) {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
             isLanded = false;
             EventManager.Trigger("sfx-jump");
@@ -185,14 +170,12 @@ public class PlayerController : MonoBehaviour
         controller.Move(velocity * Time.deltaTime);
         #endregion
 
-        if (Input.GetKeyDown(KeyCode.K))
-        {
+        if (Input.GetKeyDown(KeyCode.K)) {
             cameraShake?.Shake(0.6f, 0.5f);
         }
     }
 
-    void HandleMouseLook()
-    {
+    void HandleMouseLook() {
         if (!Application.isFocused || !allowLook) return;
 
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * sensitivityMultiplier;
@@ -205,49 +188,33 @@ public class PlayerController : MonoBehaviour
         transform.Rotate(Vector3.up * mouseX);
     }
 
-    void HandleStamina()
-    {
-        if (isSprinting)
-        {
-            if (!f_run)
-            {
+    void HandleStamina() {
+        if (isSprinting) {
+            if (!f_run) {
                 EventManager.Trigger("sfx-run-breath", 1 - currentStamina / maxStamina);
-                f_run = true; f_exhaust = f_walk = false;
+                f_run = true; f_exhaust = false;
             }
             currentStamina -= staminaDrainRate * Time.deltaTime;
-            if (currentStamina <= 0f)
-            {
+            if (currentStamina <= 0f) {
                 currentStamina = 0f;
                 isExhausted = true;
                 exhaustionTimer = exhaustionCooldown;
             }
-        }
-        else
-        {
-            if (isExhausted)
-            {
-                if (!f_exhaust)
-                {
+        } else {
+            if (isExhausted) {
+                if (!f_exhaust) {
                     EventManager.Trigger("sfx-exhausted-breath");
-                    f_exhaust = true; f_run = f_walk = false;
+                    f_exhaust = true; f_run = false;
                 }
                 exhaustionTimer -= Time.deltaTime;
                 if (exhaustionTimer <= 0f) isExhausted = false;
-            }
-            else
-            {
-                if (!f_walk)
-                {
-                    EventManager.Trigger("sfx-walk-breath");
-                    f_walk = true; f_run = f_exhaust = false;
-                }
+            } else {
                 currentStamina = Mathf.Min(maxStamina, currentStamina + staminaRegenRate * Time.deltaTime);
             }
         }
     }
 
-    bool CheckGrounded()
-    {
+    bool CheckGrounded() {
         float footHeight = controller.height / 2f - controller.radius;
         Vector3 footPos = transform.position + Vector3.down * footHeight;
 
@@ -255,8 +222,7 @@ public class PlayerController : MonoBehaviour
                || Physics.CheckSphere(footPos + Vector3.up * groundCheckOffset, groundCheckRadius, groundMask);
     }
 
-    float GetDistanceToGround()
-    {
+    float GetDistanceToGround() {
         float footHeight = controller.height / 2f - controller.radius;
         Vector3 footPos = transform.position + Vector3.down * footHeight;
 
@@ -264,16 +230,13 @@ public class PlayerController : MonoBehaviour
     }
 
     // Victory UI Integration
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Ending") && !victoryTriggered)
-        {
+    private void OnTriggerEnter(Collider other) {
+        if (other.CompareTag("Ending") && !victoryTriggered) {
             TriggerVictory();
         }
     }
 
-    private IEnumerator ShowVictoryPanel()
-    {
+    private IEnumerator ShowVictoryPanel() {
         yield return new WaitForSeconds(victoryDelay);
 
         if (victoryPanel != null) victoryPanel.SetActive(true);
@@ -284,22 +247,18 @@ public class PlayerController : MonoBehaviour
     }
 
     // Public methods for external control
-    public void SetVictoryTitle(string title)
-    {
+    public void SetVictoryTitle(string title) {
         victoryTitleContent = title;
         if (victoryTitleText != null) victoryTitleText.text = title;
     }
 
-    public void SetVictoryInstruction(string instruction)
-    {
+    public void SetVictoryInstruction(string instruction) {
         victoryInstructionContent = instruction;
         if (victoryInstructionText != null) victoryInstructionText.text = instruction;
     }
 
-    public void TriggerVictory()
-    {
-        if (!victoryTriggered)
-        {
+    public void TriggerVictory() {
+        if (!victoryTriggered) {
             victoryTriggered = true;
             StartCoroutine(ShowVictoryPanel());
         }
