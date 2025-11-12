@@ -10186,7 +10186,7 @@ PrefabInstance:
       objectReference: {fileID: 1760087382}
     - target: {fileID: 6401622197561847163, guid: 492a9582aeca7ca4fb7cfc8b282f97d4, type: 3}
       propertyPath: staminaRegenRate
-      value: 1
+      value: 0.75
       objectReference: {fileID: 0}
     - target: {fileID: 6401622197561847163, guid: 492a9582aeca7ca4fb7cfc8b282f97d4, type: 3}
       propertyPath: victoryTitleText
@@ -10194,16 +10194,12 @@ PrefabInstance:
       objectReference: {fileID: 1760087381}
     - target: {fileID: 6401622197561847163, guid: 492a9582aeca7ca4fb7cfc8b282f97d4, type: 3}
       propertyPath: exhaustionCooldown
-      value: 3
+      value: 3.5
       objectReference: {fileID: 0}
     - target: {fileID: 6401622197561847163, guid: 492a9582aeca7ca4fb7cfc8b282f97d4, type: 3}
       propertyPath: victoryInstructionText
       value: 
       objectReference: {fileID: 1760087380}
-    - target: {fileID: 6665387023655523239, guid: 492a9582aeca7ca4fb7cfc8b282f97d4, type: 3}
-      propertyPath: walkVolume
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 7531714933274804867, guid: 492a9582aeca7ca4fb7cfc8b282f97d4, type: 3}
       propertyPath: m_LocalPosition.x
       value: 645.5703

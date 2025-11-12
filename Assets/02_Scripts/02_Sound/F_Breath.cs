@@ -1,17 +1,11 @@
 using FMOD.Studio;
 using FMODUnity;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class F_Breath : MonoBehaviour {
     const string EVENT_PATH = "event:/Character/BreathWalkRun";
 
-    EventInstance breath;
-
-    float exhaustTimerLimit = 7f;
-    float exhaustTimer;
-
-    public float walkVolume;
+    EventInstance exhaust, run, walk;
 
     void OnEnable() {
         EventManager.Subscribe("sfx-walk-breath", PlayWalkEvent);
@@ -23,48 +17,47 @@ public class F_Breath : MonoBehaviour {
         EventManager.Unsubscribe("sfx-walk-breath", PlayWalkEvent);
         EventManager.UnsubscribeFloat("sfx-run-breath", PlayRunEvent);
         EventManager.Unsubscribe("sfx-exhausted-breath", PlayExhaustedEvent);
-        breath.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        exhaust.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        run.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        walk.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
     }
 
-    void Start() {
-        breath = RuntimeManager.CreateInstance(EVENT_PATH);
-        RuntimeManager.AttachInstanceToGameObject(breath, transform, true);
-    }
-
-    void Update() {
-        if (exhaustTimer < exhaustTimerLimit) exhaustTimer += Time.deltaTime;
-        else PlayWalkEvent();
-    }
 
     void PlayWalkEvent() {
-            Debug.Log("what");
-        if (exhaustTimer > exhaustTimerLimit) { //start breathing normally only after you get your breath back
-            Debug.Log("walk breath");
-            breath.setVolume(walkVolume);
+        walk = RuntimeManager.CreateInstance(EVENT_PATH);
+        RuntimeManager.AttachInstanceToGameObject(walk, transform, true);
 
-            breath.setParameterByName("Breathing", 0); // 0 is walk
+        run.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT); //allows walk breath to play after running
 
-            breath.start();
-            breath.release();
+        PLAYBACK_STATE state;
+        exhaust.getPlaybackState(out state);
+        if (state != PLAYBACK_STATE.PLAYING) { //start breathing normally only after you get your breath back
+            walk.setParameterByName("Breathing", 0); // 0 is walk
+            walk.start();
+            walk.release();
         }
     }
 
     void PlayRunEvent(float stamina) {
-        breath.setVolume(1);
+        run = RuntimeManager.CreateInstance(EVENT_PATH);
+        RuntimeManager.AttachInstanceToGameObject(run, transform, true);
 
-        breath.setParameterByName("RunningBreath", stamina);
-        breath.setParameterByName("Breathing", 1); //1 is run
+        exhaust.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
 
-        breath.start();
-        breath.release();
+        run.setParameterByName("RunningBreath", stamina);
+        run.setParameterByName("Breathing", 1); //1 is run
+
+        run.start();
+        run.release();
     }
 
     void PlayExhaustedEvent() {
-        exhaustTimer = 0;
+        exhaust = RuntimeManager.CreateInstance(EVENT_PATH);
+        RuntimeManager.AttachInstanceToGameObject(exhaust, transform, true);
 
-        breath.setParameterByName("Breathing", 2); //2 is exhausted
+        exhaust.setParameterByName("Breathing", 2); //2 is exhausted
 
-        breath.start();
-        breath.release();
+        exhaust.start();
+        exhaust.release();
     }
 }
