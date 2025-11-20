@@ -13,33 +13,43 @@ public class F_Flashlight : MonoBehaviour {
     void OnDisable() {
         EventManager.Unsubscribe("sfx-light-on", PlayOnEvent);
         EventManager.Unsubscribe("sfx-light-off", PlayOffEvent);
-        buzz.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        if(buzz.isValid()) buzz.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
     }
 
 
     void PlayOnEvent() {
         EventInstance on = RuntimeManager.CreateInstance(EVENT_PATH);
         buzz = RuntimeManager.CreateInstance(EVENT_PATH);
-        RuntimeManager.AttachInstanceToGameObject(on, transform, true);
-        RuntimeManager.AttachInstanceToGameObject(buzz, transform, true);
 
-        buzz.setParameterByName("LightSwitch", 2, false); // 2 is buzz
-        buzz.start();
-        buzz.release();
+        if (buzz.isValid())
+        {
+            RuntimeManager.AttachInstanceToGameObject(on, transform, true);
+            RuntimeManager.AttachInstanceToGameObject(buzz, transform, true);
 
-        on.setParameterByName("LightSwitch", 1, false); // 1 is on
-        on.start();
-        on.release();
+            buzz.setParameterByName("LightSwitch", 2, false); // 2 is buzz
+            buzz.start();
+            buzz.release();
+        }
+
+        if (on.isValid())
+        {
+            on.setParameterByName("LightSwitch", 1, false); // 1 is on
+            on.start();
+            on.release();
+        }
     }
 
     void PlayOffEvent() {
         EventInstance off = RuntimeManager.CreateInstance(EVENT_PATH);
-        RuntimeManager.AttachInstanceToGameObject(off, transform, true);
+        if (off.isValid()) RuntimeManager.AttachInstanceToGameObject(off, transform, true);
 
-        buzz.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        if (buzz.isValid()) buzz.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
 
-        off.setParameterByName("LightSwitch", 3, false); // 3 is off
-        off.start();
-        off.release();
+        if (off.isValid())
+        {
+            off.setParameterByName("LightSwitch", 3, false); // 3 is off
+            off.start();
+            off.release();
+        }
     }
 }

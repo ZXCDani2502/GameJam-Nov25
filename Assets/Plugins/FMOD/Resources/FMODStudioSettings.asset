@@ -632,19 +632,19 @@ MonoBehaviour:
   RealChannelSettings: []
   Plugins: []
   MasterBanks:
-  - Desktop/Master
+  - Master
   - Desktop/Master
   Banks:
   - Desktop/Foley
-  - Desktop/Foley
-  - Desktop/Monster
   - Desktop/Monster
   - Desktop/Music
-  - Desktop/Music
-  - Desktop/Player
   - Desktop/Player
   - Desktop/UI
-  - Desktop/UI
+  - Foley
+  - Monster
+  - Music
+  - Player
+  - UI
   BanksToLoad: []
   LiveUpdatePort: 9264
   EnableMemoryTracking: 0

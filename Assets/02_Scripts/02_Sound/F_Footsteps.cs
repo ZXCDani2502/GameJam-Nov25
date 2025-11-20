@@ -8,6 +8,9 @@ public class F_Footsteps : MonoBehaviour {
     float rayDistance = 0.3f;
     const string EVENT_PATH = "event:/Character/Footsteps";
 
+    EventInstance walk;
+    EventInstance run;
+
     void OnEnable() {
         EventManager.Subscribe("sfx-walk-step", PlayWalkEvent);
         EventManager.Subscribe("sfx-run-step", PlayRunEvent);
@@ -20,28 +23,44 @@ public class F_Footsteps : MonoBehaviour {
 
     void PlayWalkEvent() {
         MaterialCheck();
-        EventInstance walk = RuntimeManager.CreateInstance(EVENT_PATH);
-        RuntimeManager.AttachInstanceToGameObject(walk, transform, true);
 
+        if (walk.isValid())
+            walk.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
 
-        walk.setParameterByName("Terrain", materialValue);
-        walk.setParameterByName("WalkRun", 0, false); // 0 is walk
+        walk = RuntimeManager.CreateInstance(EVENT_PATH);
+        if (walk.isValid())
+        {
+            RuntimeManager.AttachInstanceToGameObject(walk, transform, true);
 
-        walk.start();
-        walk.release();
+            walk.setParameterByName("Terrain", materialValue);
+            walk.setParameterByName("WalkRun", 0, false); // 0 is walk
+
+            walk.start();
+            walk.release();
+
+            Debug.Log("Walking");
+        }
     }
     
     void PlayRunEvent() {
         MaterialCheck();
-        EventInstance run = RuntimeManager.CreateInstance(EVENT_PATH);
-        RuntimeManager.AttachInstanceToGameObject(run, transform, true);
 
+        if (run.isValid())
+            run.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
 
-        run.setParameterByName("Terrain", materialValue);
-        run.setParameterByName("WalkRun", 1, false); //1 is run
+        run = RuntimeManager.CreateInstance(EVENT_PATH);
+        if (run.isValid())
+        {
+            RuntimeManager.AttachInstanceToGameObject(run, transform, true);
 
-        run.start();
-        run.release();
+            run.setParameterByName("Terrain", materialValue);
+            run.setParameterByName("WalkRun", 1, false); //1 is run
+
+            run.start();
+            run.release();
+
+            Debug.Log("Running");
+        }
     }
 
     void MaterialCheck() {
