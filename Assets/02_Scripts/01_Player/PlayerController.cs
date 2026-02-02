@@ -222,39 +222,45 @@ public class PlayerController : MonoBehaviour
     {
         if (isSprinting)
         {
-            if (!f_run)
-            {
-                EventManager.Trigger("sfx-run-breath", 1 - currentStamina / maxStamina);
-                f_run = true; f_exhaust = f_walk = false;
-            }
+            // Drain stamina while sprinting
             currentStamina -= staminaDrainRate * Time.deltaTime;
+
             if (currentStamina <= 0f)
             {
+                // Stamina depleted → lock sprint
                 currentStamina = 0f;
                 isExhausted = true;
                 exhaustionTimer = exhaustionCooldown;
+
+                if (!f_exhaust)
+                {
+                    EventManager.Trigger("sfx-exhausted-breath");
+                    f_exhaust = true; f_run = f_walk = false;
+                }
+            }
+            else
+            {
+                // Play run breath once
+                if (!f_run)
+                {
+                    EventManager.Trigger("sfx-run-breath", 1 - currentStamina / maxStamina);
+                    f_run = true; f_exhaust = f_walk = false;
+                }
             }
         }
         else
         {
             if (isExhausted)
             {
-                if (!f_exhaust)
-                {
-                    EventManager.Trigger("sfx-exhausted-breath");
-                    f_exhaust = true; f_run = f_walk = false;
-                }
+                // Countdown exhaustion
                 exhaustionTimer -= Time.deltaTime;
-                if (exhaustionTimer <= 0f) isExhausted = false;
-            }
-            else
-            {
-                if (!f_walk)
+                if (exhaustionTimer <= 0f)
                 {
-                    EventManager.Trigger("sfx-walk-breath");
-                    f_walk = true; f_run = f_exhaust = false;
+                    // Unlock sprint and instantly refill stamina
+                    isExhausted = false;
+                    currentStamina = maxStamina;
+                    f_walk = f_run = f_exhaust = false;
                 }
-                currentStamina = Mathf.Min(maxStamina, currentStamina + staminaRegenRate * Time.deltaTime);
             }
         }
     }
