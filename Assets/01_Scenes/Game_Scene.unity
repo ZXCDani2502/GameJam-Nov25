@@ -17,13 +17,13 @@ RenderSettings:
   m_Fog: 1
   m_FogColor: {r: 0.13836467, g: 0.03459117, b: 0, a: 1}
   m_FogMode: 3
-  m_FogDensity: 0.005
+  m_FogDensity: 0
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
   m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
-  m_AmbientIntensity: 0.1
+  m_AmbientIntensity: 0
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 2100000, guid: 145f10118a511e54ea1fd04e45855912, type: 2}
@@ -10030,74 +10030,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 1130263139884101202, guid: 492a9582aeca7ca4fb7cfc8b282f97d4, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2139339948354081633, guid: 492a9582aeca7ca4fb7cfc8b282f97d4, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2316584092813616456, guid: 492a9582aeca7ca4fb7cfc8b282f97d4, type: 3}
-      propertyPath: m_SpotAngle
-      value: 55
-      objectReference: {fileID: 0}
-    - target: {fileID: 3157274722422144189, guid: 492a9582aeca7ca4fb7cfc8b282f97d4, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3167039572101908559, guid: 492a9582aeca7ca4fb7cfc8b282f97d4, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3690841451403856564, guid: 492a9582aeca7ca4fb7cfc8b282f97d4, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6401622197561847163, guid: 492a9582aeca7ca4fb7cfc8b282f97d4, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6401622197561847163, guid: 492a9582aeca7ca4fb7cfc8b282f97d4, type: 3}
-      propertyPath: maxStamina
-      value: 6
-      objectReference: {fileID: 0}
     - target: {fileID: 6401622197561847163, guid: 492a9582aeca7ca4fb7cfc8b282f97d4, type: 3}
       propertyPath: victoryPanel
       value: 
       objectReference: {fileID: 1760087382}
     - target: {fileID: 6401622197561847163, guid: 492a9582aeca7ca4fb7cfc8b282f97d4, type: 3}
-      propertyPath: staminaRegenRate
-      value: 0.75
-      objectReference: {fileID: 0}
-    - target: {fileID: 6401622197561847163, guid: 492a9582aeca7ca4fb7cfc8b282f97d4, type: 3}
       propertyPath: victoryTitleText
       value: 
       objectReference: {fileID: 1760087381}
     - target: {fileID: 6401622197561847163, guid: 492a9582aeca7ca4fb7cfc8b282f97d4, type: 3}
-      propertyPath: exhaustionCooldown
-      value: 3.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6401622197561847163, guid: 492a9582aeca7ca4fb7cfc8b282f97d4, type: 3}
       propertyPath: victoryInstructionText
       value: 
       objectReference: {fileID: 1760087380}
-    - target: {fileID: 6665387023655523239, guid: 492a9582aeca7ca4fb7cfc8b282f97d4, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6908033027408920886, guid: 492a9582aeca7ca4fb7cfc8b282f97d4, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7075571638167317668, guid: 492a9582aeca7ca4fb7cfc8b282f97d4, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7342915807908395772, guid: 492a9582aeca7ca4fb7cfc8b282f97d4, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7531714933274804867, guid: 492a9582aeca7ca4fb7cfc8b282f97d4, type: 3}
       propertyPath: m_LocalPosition.x
       value: 645.5703
