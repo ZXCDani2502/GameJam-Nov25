@@ -15,15 +15,12 @@ public class Monster : MonoBehaviour {
 
     [Header("Thresholds")]
     [Tooltip("Monster starts following behind you")]
-    int threshold1 = 25;
-    [Tooltip("Ambience randomly mutes")]
-    int threshold2;
+    public int threshold1 = 25;
     [Tooltip("Spawn eyes out of view")]
-    int threshold3 = 98;
+    public int threshold2 = 95;
 
     bool threshold1Hit; //following footsteps
     bool threshold2Hit;
-    bool threshold3Hit;
 
     [Header("Monster Events")]
     public float monsterBaseDistance = 15f;
@@ -50,12 +47,15 @@ public class Monster : MonoBehaviour {
     }
 
     void Update() {
+        //hit
         if (!threshold1Hit && aggression > threshold1) threshold1Hit = true;
-        if (!threshold2Hit && aggression > threshold2) threshold2Hit = true;
-        if (!threshold3Hit && aggression > threshold3) {
-            threshold3Hit = true;
+        if (!threshold2Hit && aggression > threshold2) {
+            threshold2Hit = true;
             TPOutOfView();
         }
+
+        //unhit
+        if (threshold1Hit && aggression < 25) threshold1Hit = false;
 
         if (quietTimer > quietTimerLimit) pacifyMultiplier = quietPacifyMult;
         else pacifyMultiplier = initialPacifyMult;
@@ -69,7 +69,7 @@ public class Monster : MonoBehaviour {
 
     void FixedUpdate() {
         if (threshold1Hit) StartFollowing();
-        if (threshold3Hit) {
+        if (threshold2Hit) {
             CheckLookingAtMonster();
             if (Vector3.Distance(transform.position, player.transform.position) > distanceFromPlayerToChase) {
                 TPOutOfView();
@@ -100,7 +100,7 @@ public class Monster : MonoBehaviour {
     }
 
     void StartFollowing() {
-        if (threshold3Hit) return;
+        if (threshold2Hit) return;
 
         transform.position = player.transform.position - player.transform.forward * monsterBaseDistance * Random.Range(0.7f, 1.3f); // a bit of variation
 
