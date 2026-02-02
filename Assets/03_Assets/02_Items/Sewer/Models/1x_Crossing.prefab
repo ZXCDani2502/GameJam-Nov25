@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1963837235033152505}
   - component: {fileID: 2812469968029514214}
   - component: {fileID: 8474142658960680768}
+  - component: {fileID: 1366564205071500773}
   m_Layer: 0
   m_Name: Serwers02_002
   m_TagString: Untagged
@@ -88,6 +89,28 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &1366564205071500773
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 43403603554576534}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 3471909226773950300, guid: 82762683b4c8b3b45913287cedad32d5, type: 3}
 --- !u!1 &3049372464546278656
 GameObject:
   m_ObjectHideFlags: 0
@@ -97,7 +120,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4853795327069283950}
-  - component: {fileID: 1866631094817003801}
   m_Layer: 3
   m_Name: 1x_Crossing
   m_TagString: Gravel
@@ -121,25 +143,3 @@ Transform:
   - {fileID: 1963837235033152505}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!64 &1866631094817003801
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3049372464546278656}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 3471909226773950300, guid: 9ffe24a02d70bf541b0cac083292c6e1, type: 3}
