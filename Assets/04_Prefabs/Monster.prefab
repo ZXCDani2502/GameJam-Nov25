@@ -49,14 +49,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   aggression: 0
   initialPacifyMult: 2
-  quietPacifyMult: 5
+  quietPacifyMult: 6
   quietTimerLimit: 3
   threshold1: 40
   threshold2: 95
   monsterBaseDistance: 13
   followTimerLimit: 0.6
-  lookMonsterTimerLimit: 2
-  distanceFromPlayerToChase: 50
+  lookMonsterTimerLimit: 1.5
+  distanceFromPlayerToChase: 30
 --- !u!114 &7393265031615467826
 MonoBehaviour:
   m_ObjectHideFlags: 0
