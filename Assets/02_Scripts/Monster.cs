@@ -34,7 +34,6 @@ public class Monster : MonoBehaviour {
     [SerializeField] float followTimerLimit = 0.6f;
     float followTimer;
     //heavy
-    int randomDirection;
     [SerializeField] float lookMonsterTimerLimit = 1.5f;
     float lookMonsterTimer;
     [SerializeField] float distanceFromPlayerToChase = 50;
@@ -56,7 +55,6 @@ public class Monster : MonoBehaviour {
         if (!threshold3Hit && aggression > threshold3) {
             threshold3Hit = true;
             TPOutOfView();
-            randomDirection = Random.Range(0, 2);
         }
 
         if (quietTimer > quietTimerLimit) pacifyMultiplier = quietPacifyMult;
@@ -64,7 +62,9 @@ public class Monster : MonoBehaviour {
 
         if (followTimer < followTimerLimit) followTimer += Time.deltaTime;
 
-        aggression -= pacifyMultiplier * Time.deltaTime;
+        if (aggression > 0)
+            aggression -= pacifyMultiplier * Time.deltaTime;
+
     }
 
     void FixedUpdate() {
@@ -101,6 +101,7 @@ public class Monster : MonoBehaviour {
 
     void StartFollowing() {
         if (threshold3Hit) return;
+
         transform.position = player.transform.position - player.transform.forward * monsterBaseDistance * Random.Range(0.7f, 1.3f); // a bit of variation
 
         if (Physics.Raycast(transform.position + new Vector3(0, 10, 0), Vector3.down, out rayHit, rayDistance, LayerMask.GetMask("Ground"))) {
@@ -115,8 +116,9 @@ public class Monster : MonoBehaviour {
 
     void TPOutOfView() {
         var pt = player.transform;
-        //spawn on either the left or the right of the player
-        transform.position = randomDirection == 0 ? pt.position + pt.right * monsterBaseDistance : pt.position - pt.right * monsterBaseDistance;
+
+        int randomDirection = Random.Range(0, 2); //spawn on either the left or the right of the player
+        transform.position = randomDirection == 0 ? (pt.position + pt.right * monsterBaseDistance) : (pt.position - pt.right * monsterBaseDistance);
         if (Physics.Raycast(transform.position + new Vector3(0, 10, 0), Vector3.down, out rayHit, rayDistance, LayerMask.GetMask("Ground")))
             transform.position = new(transform.position.x, rayHit.point.y + 2f, transform.position.z);
         transform.LookAt(pt);

@@ -51,7 +51,7 @@ MonoBehaviour:
   initialPacifyMult: 2
   quietPacifyMult: 5
   quietTimerLimit: 3
-  monsterBaseDistance: 20
+  monsterBaseDistance: 13
   followTimerLimit: 0.6
   lookMonsterTimerLimit: 2
   distanceFromPlayerToChase: 50
