@@ -37,8 +37,8 @@ public class PlayerController : MonoBehaviour
     public float victoryDelay = 5f;
 
     [Header("Victory Text Content")]
-    [TextArea] public string victoryTitleContent = "You Won"; // editable in inspector
-    [TextArea] public string victoryInstructionContent = "Press Enter to return to Main Menu"; // editable in inspector
+    [TextArea] public string victoryTitleContent = "You Won";
+    [TextArea] public string victoryInstructionContent = "Press Enter to return to Main Menu";
 
     private bool victoryTriggered = false;
 
@@ -47,13 +47,12 @@ public class PlayerController : MonoBehaviour
     Vector3 velocity;
     float xRotation = 0f;
     bool isGrounded;
+    bool wasGrounded;
     bool isLanded;
 
-    // Sprint variables
     bool isSprinting;
     float currentSpeed;
 
-    // Stamina variables
     float currentStamina;
     bool isExhausted = false;
     float exhaustionTimer = 0f;
@@ -69,15 +68,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float runNoiseLevel = 5;
     [SerializeField] float landNoiseLevel = 10;
 
-    // Breathing
     bool f_walk, f_run, f_exhaust;
 
     CameraShake cameraShake;
 
-    // Mouse look lock flag
     bool allowLook = true;
 
-    // External control for PauseManager
+    CollisionFlags collisionFlags;
+
     public void SetLookState(bool canLook)
     {
         allowLook = canLook;
@@ -105,7 +103,6 @@ public class PlayerController : MonoBehaviour
         HandleMovement();
         HandleStamina();
 
-        // Check for Enter key to return to Main Menu after victory
         if (victoryTriggered && Input.GetKeyDown(KeyCode.Return))
         {
             SceneManager.LoadScene("Main_Menu");
@@ -114,6 +111,8 @@ public class PlayerController : MonoBehaviour
 
     void HandleMovement()
     {
+        collisionFlags = CollisionFlags.None;
+
         #region WalkRun
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
@@ -125,7 +124,7 @@ public class PlayerController : MonoBehaviour
         currentSpeed = Mathf.Lerp(currentSpeed, targetSpeed, sprintAcceleration * Time.deltaTime);
 
         Vector3 move = transform.right * x + transform.forward * z;
-        controller.Move(move * currentSpeed * Time.deltaTime);
+        collisionFlags |= controller.Move(move * currentSpeed * Time.deltaTime);
 
         if (cameraShake != null)
         {
@@ -162,12 +161,14 @@ public class PlayerController : MonoBehaviour
         #endregion
 
         #region Jump
-        isGrounded = CheckGrounded();
+        bool controllerGrounded = (collisionFlags & CollisionFlags.Below) != 0;
+        bool probeGrounded = CheckGrounded();
 
-        // Landing
-        if (!isLanded && velocity.y < 0f && GetDistanceToGround() <= groundProximityThreshold)
+        isGrounded = controllerGrounded || probeGrounded;
+
+        // Landing: trigger only once when we first hit the ground (any grounded detection)
+        if (!wasGrounded && isGrounded && !isLanded)
         {
-            velocity.y = -2f;
             isLanded = true;
             cameraShake?.Shake(0.05f, 0.01f);
             EventManager.Trigger("sfx-land");
@@ -176,13 +177,25 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
-            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            // Reset vertical velocity to zero to neutralize slope effects
+            velocity.y = 0f;
+            velocity.y += Mathf.Sqrt(jumpHeight * -2f * gravity);
+
             isLanded = false;
             EventManager.Trigger("sfx-jump");
         }
 
-        velocity.y += (velocity.y < 0f ? gravity * fallMultiplier : gravity) * Time.deltaTime;
-        controller.Move(velocity * Time.deltaTime);
+        if (!isGrounded)
+        {
+            velocity.y += (velocity.y < 0f ? gravity * fallMultiplier : gravity) * Time.deltaTime;
+        }
+        else if (velocity.y < 0f && controllerGrounded && isLanded)
+        {
+            velocity.y = -2f;
+        }
+
+        collisionFlags |= controller.Move(velocity * Time.deltaTime);
+        wasGrounded = isGrounded;
         #endregion
 
         if (Input.GetKeyDown(KeyCode.K))
@@ -263,7 +276,6 @@ public class PlayerController : MonoBehaviour
         return Physics.Raycast(footPos, Vector3.down, out RaycastHit hit, 5f, groundMask) ? hit.distance : Mathf.Infinity;
     }
 
-    // Victory UI Integration
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Ending") && !victoryTriggered)
@@ -283,7 +295,6 @@ public class PlayerController : MonoBehaviour
         SetLookState(false);
     }
 
-    // Public methods for external control
     public void SetVictoryTitle(string title)
     {
         victoryTitleContent = title;
